@@ -13,8 +13,4 @@
     <PackageReference Include="NetcodeHub.Packages.Extensions.Attributes.RequiredGuid" Version="1.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO/Response/" />
-  </ItemGroup>
-
 </Project>
