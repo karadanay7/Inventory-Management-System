@@ -1,0 +1,133 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj": {}
+  },
+  "projects": {
+    "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj",
+        "projectName": "WebUI",
+        "projectPath": "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj",
+        "packagesPath": "/Users/aysegulkaradan/.nuget/packages/",
+        "outputPath": "/Users/aysegulkaradan/Projects/IMS/WebUI/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/aysegulkaradan/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Mapster": {
+              "target": "Package",
+              "version": "[7.4.1-pre01, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Client": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "MudBlazor": {
+              "target": "Package",
+              "version": "[7.6.0, )"
+            },
+            "NetcodeHub.Packages.Components.BreadCrumb": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "NetcodeHub.Packages.Components.DataGrid": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "NetcodeHub.Packages.Components.FileUpload": {
+              "target": "Package",
+              "version": "[1.0.6, )"
+            },
+            "NetcodeHub.Packages.Components.Modal": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "NetcodeHub.Packages.Components.Toast": {
+              "target": "Package",
+              "version": "[1.0.5, )"
+            },
+            "NetcodeHub.Packages.Components.Validations": {
+              "target": "Package",
+              "version": "[1.0.1, )"
+            },
+            "NetcodeHub.Packages.UI.Templates.Breeze": {
+              "target": "Package",
+              "version": "[1.1.4, )"
+            },
+            "Syncfusion.Blazor.Charts": {
+              "target": "Package",
+              "version": "[26.2.9, )"
+            },
+            "Syncfusion.Blazor.Grid": {
+              "target": "Package",
+              "version": "[26.2.9, )"
+            },
+            "Syncfusion.Blazor.Navigations": {
+              "target": "Package",
+              "version": "[26.2.9, )"
+            },
+            "Syncfusion.Blazor.Themes": {
+              "target": "Package",
+              "version": "[26.2.9, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
