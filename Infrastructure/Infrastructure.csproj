@@ -9,14 +9,14 @@
  <ItemGroup>
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MediatR" Version="12.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-  
 
   </ItemGroup>
 
  <ItemGroup>
-   <Folder Include="DataAccess/" />
+   <ProjectReference Include="..\Application\Application.csproj" />
  </ItemGroup>
 </Project>
