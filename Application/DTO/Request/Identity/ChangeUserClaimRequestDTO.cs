@@ -1,8 +1,9 @@
 using System;
+using Application.DTO.Response.Identity;
 
 namespace Application.DTO.Request.Identity;
 
-public class ChangeUserClaimRequestDTO
+public class ChangeUserClaimRequestDTO:BaseUserClaimsDTO
 {
 
 }
