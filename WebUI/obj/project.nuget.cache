@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "T/oroqdgoH8=",
+  "dgSpecHash": "U+eOH3vThMI=",
   "success": true,
   "projectFilePath": "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj",
   "expectedPackageFiles": [
@@ -87,6 +87,8 @@
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.extensions.attributes.requiredguid/1.0.0/netcodehub.packages.extensions.attributes.requiredguid.1.0.0.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.extensions.localstorage/1.0.0/netcodehub.packages.extensions.localstorage.1.0.0.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.ui.templates.breeze/1.1.4/netcodehub.packages.ui.templates.breeze.1.1.4.nupkg.sha512",
+    "/Users/aysegulkaradan/.nuget/packages/npgsql/8.0.3/npgsql.8.0.3.nupkg.sha512",
+    "/Users/aysegulkaradan/.nuget/packages/npgsql.entityframeworkcore.postgresql/8.0.4/npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.blazor.buttons/26.2.9/syncfusion.blazor.buttons.26.2.9.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.blazor.calendars/26.2.9/syncfusion.blazor.calendars.26.2.9.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.blazor.charts/26.2.9/syncfusion.blazor.charts.26.2.9.nupkg.sha512",
