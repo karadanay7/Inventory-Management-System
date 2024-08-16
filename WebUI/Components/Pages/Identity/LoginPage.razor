@@ -1,66 +1,72 @@
 ﻿@page "/Account/login"
 @using Application.DTO.Request.Identity
 @using Microsoft.AspNetCore.Components.Authorization
+@inject IAccountService accountService
+@inject NavigationManager Navigation
 
-<EditForm Model="LoginModel" method="post" OnValidSubmit="LoginAsync" FormName="login" Enhance>
-    <div><h1>login</h1></div>
-    <DataAnnotationsValidator/>
-    <InputText @bind-Value="LoginModel.Email" class=""></InputText>
-    <label for="email">E-mail</label>
-     <InputText @bind-Value="LoginModel.Password" class=""></InputText>
-    <label for="email">Password</label>
-    <button type="submit"> Login</button>
-    <div>
-        @if(@ErrorMessage != "")
-        {
-            <div class="alert alert-danger" role="alert">
-                @ErrorMessage
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <h1 class="text-2xl font-semibold mb-6">Login</h1>
+        <EditForm Model="LoginModel" OnValidSubmit="LoginAsync">
+            <DataAnnotationsValidator/>
+            <ValidationSummary class="mb-4"/>
+
+            <div class="mb-4">
+                <InputText @bind-Value="LoginModel.Email" class="input input-bordered w-full" placeholder="E-mail"/>
+                <label for="email" class="label">E-mail</label>
             </div>
-        }
-        else 
-        {
-            <ValidationSummary/>
-        }
+            <div class="mb-4">
+                <InputText @bind-Value="LoginModel.Password" class="input input-bordered w-full" type="password" placeholder="Password"/>
+                <label for="password" class="label">Password</label>
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit" class="btn btn-primary w-full">Login</button>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-error mt-4">
+                    @ErrorMessage
+                </div>
+            }
+        </EditForm>
     </div>
-
-
-</EditForm>
+</div>
 
 @code {
     string ErrorMessage = "";
     public bool IsBusy { get; set; } = false;
-    [SupplyParameterFromForm]
     private LoginUserRequestDTO LoginModel { get; set; } = new ();
 
     private async Task LoginAsync()
     {
-       if (IsBusy) return;
-       ErrorMessage = "";
-       IsBusy = true;
-       var response = await accountService.LoginAsync(LoginModel);
-       if (!response.Flag)
-       {
+        if (IsBusy) return;
+        ErrorMessage = "";
+        IsBusy = true;
+        var response = await accountService.LoginAsync(LoginModel);
+        if (!response.Flag)
+        {
+            IsBusy = false;
+            ErrorMessage = response.Message;
+            return;
+        }
         IsBusy = false;
-        ErrorMessage = response.Message;
-        return;
-       }
-       IsBusy = false;
-         Navigation.NavigateTo(uri: "app/home", true);
-       
+        Navigation.NavigateTo("app/home", true);
     }
+
     [CascadingParameter]
     public Task<AuthenticationState>? ClientAuthState { get; set; }
-        protected override async Task OnInitializedAsync()
-        {
-           try 
-           {
-            if((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
-            Navigation.NavigateTo("app/home",false, true);
-           }
-              catch 
-              {
-               
-              }
-        }
 
+    protected override async Task OnInitializedAsync()
+    {
+        try 
+        {
+            if ((await ClientAuthState!).User.Identity!.IsAuthenticated)
+                Navigation.NavigateTo("app/home", false, true);
+        }
+        catch 
+        {
+            // Optionally handle exceptions
+        }
+    }
 }
