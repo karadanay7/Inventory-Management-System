@@ -14,8 +14,16 @@ using Application.Extension.Identity;
 
 namespace Infrastructure.Repository;
 
-public class Account(UserManager<IdentityUser> userManager, SignInManager<ApplicationUser> signInManager) : IAccount
+public class Account : IAccount
 {
+     private readonly UserManager<ApplicationUser> userManager;
+    private readonly SignInManager<ApplicationUser> signInManager;
+
+    public Account(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+    {
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+    }
     public async Task<ServiceResponse> CreateUserAsync(CreateUserRequestDTO model)
     {
         var user = await FindUserByEmail(model.Email);
@@ -114,8 +122,8 @@ public class Account(UserManager<IdentityUser> userManager, SignInManager<Applic
         if (!result.Succeeded) return new ServiceResponse(false, "Unkonwn error occured");
         else return new ServiceResponse(true, null);
     }
-    private async Task<ApplicationUser> FindUserByEmail(string email) => await userManager.FindByEmailAsync(email);
-    private async Task<ApplicationUser> FindUserById(string id) => await userManager.FindByIdAsync(id);
+    private async Task<ApplicationUser> FindUserByEmail(string email) => (ApplicationUser)await userManager.FindByEmailAsync(email);
+    // private async Task<ApplicationUser> FindUserById(string id) => await userManager.FindByIdAsync(id);
 
     private static ServiceResponse CheckResult(IdentityResult result)
     {

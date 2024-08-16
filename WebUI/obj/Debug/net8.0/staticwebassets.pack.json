@@ -5,16 +5,12 @@
       "PackagePath": "staticwebassets/WebUI.bundle.scp.css"
     },
     {
-      "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/app.css",
-      "PackagePath": "staticwebassets/app.css"
+      "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/css/app.css",
+      "PackagePath": "staticwebassets/css/app.css"
     },
     {
-      "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/bootstrap/bootstrap.min.css",
-      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css"
-    },
-    {
-      "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/bootstrap/bootstrap.min.css.map",
-      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css.map"
+      "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/css/app.min.css",
+      "PackagePath": "staticwebassets/css/app.min.css"
     },
     {
       "Id": "/Users/aysegulkaradan/Projects/IMS/WebUI/wwwroot/favicon.png",

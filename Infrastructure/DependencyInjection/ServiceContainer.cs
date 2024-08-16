@@ -12,32 +12,34 @@ namespace Infrastructure.DependencyInjection;
 
 public static class ServiceContainer
 {
- public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration config)
- {
-     services.AddDbContext<AppDbContext>(o => o.UseNpgsql(config.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
-     services.AddAuthentication(options=> {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-     }).AddIdentityCookies();
-     services.AddIdentityCore<ApplicationUser>()
-     .AddEntityFrameworkStores<AppDbContext>()
-     .AddSignInManager()
-     .AddDefaultTokenProviders();
+    public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddDbContext<AppDbContext>(o => o.UseNpgsql(config.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
 
-     services.AddAuthorizationBuilder().AddPolicy("AdministrationPolicy", adp =>
-     {
-        adp.RequireAuthenticatedUser();
-        adp.RequireRole("Admin", "Manager");
-     }).AddPolicy("UserPolicy", udp =>
-     {
-        udp.RequireAuthenticatedUser();
-        udp.RequireRole("User");
-     });
-     services.AddScoped<IAccount, Account>();
-     return services;
-    
-    
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = IdentityConstants.ApplicationScheme;
+            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+        }).AddIdentityCookies();
 
-    
-}
+        services.AddIdentityCore<ApplicationUser>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders();
+
+        services.AddAuthorizationBuilder().AddPolicy("AdministrationPolicy", adp =>
+        {
+            adp.RequireAuthenticatedUser();
+            adp.RequireRole("Admin", "Manager");
+        }).AddPolicy("UserPolicy", udp =>
+        {
+            udp.RequireAuthenticatedUser();
+            udp.RequireRole("User");
+        });
+
+        services.AddCascadingAuthenticationState();
+        services.AddScoped<IAccount, Account>();
+
+        return services;
+    }
 }
