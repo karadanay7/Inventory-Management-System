@@ -4,12 +4,15 @@ using Application.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Infrastructure.DataAccess;
 using WebUI.Components.Layout.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddInfrastructureService(builder.Configuration);
 builder.Services.AddApplicationService();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthStateProvider>();
+
 
 
 builder.Services.AddRazorComponents()
