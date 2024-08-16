@@ -1,0 +1,66 @@
+﻿@page "/Account/login"
+@using Application.DTO.Request.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+
+<EditForm Model="LoginModel" method="post" OnValidSubmit="LoginAsync" FormName="login" Enhance>
+    <div><h1>login</h1></div>
+    <DataAnnotationsValidator/>
+    <InputText @bind-Value="LoginModel.Email" class=""></InputText>
+    <label for="email">E-mail</label>
+     <InputText @bind-Value="LoginModel.Password" class=""></InputText>
+    <label for="email">Password</label>
+    <button type="submit"> Login</button>
+    <div>
+        @if(@ErrorMessage != "")
+        {
+            <div class="alert alert-danger" role="alert">
+                @ErrorMessage
+            </div>
+        }
+        else 
+        {
+            <ValidationSummary/>
+        }
+    </div>
+
+
+</EditForm>
+
+@code {
+    string ErrorMessage = "";
+    public bool IsBusy { get; set; } = false;
+    [SupplyParameterFromForm]
+    private LoginUserRequestDTO LoginModel { get; set; } = new ();
+
+    private async Task LoginAsync()
+    {
+       if (IsBusy) return;
+       ErrorMessage = "";
+       IsBusy = true;
+       var response = await accountService.LoginAsync(LoginModel);
+       if (!response.Flag)
+       {
+        IsBusy = false;
+        ErrorMessage = response.Message;
+        return;
+       }
+       IsBusy = false;
+         Navigation.NavigateTo(uri: "app/home", true);
+       
+    }
+    [CascadingParameter]
+    public Task<AuthenticationState>? ClientAuthState { get; set; }
+        protected override async Task OnInitializedAsync()
+        {
+           try 
+           {
+            if((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
+            Navigation.NavigateTo("app/home",false, true);
+           }
+              catch 
+              {
+               
+              }
+        }
+
+}
