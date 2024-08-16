@@ -2,12 +2,15 @@ using System;
 using System.Security.Claims;
 using Application.DTO.Request.Identity;
 using Application.DTO.Response;
-using Application.DTO.Response.Identity;
-using Application.Extension.Identity;
-using Application.Interface.Identity;
-using Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
+using Application.Interface.Identity;
+using Application.DTO.Response.Identity;
+using Application.Extension.Identity;
+
+
+
 
 namespace Infrastructure.Repository;
 

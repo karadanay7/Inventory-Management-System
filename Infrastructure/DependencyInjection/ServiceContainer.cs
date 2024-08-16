@@ -1,6 +1,8 @@
 using System;
 using Application.Extension.Identity;
+using Application.Interface.Identity;
 using Infrastructure.DataAccess;
+using Infrastructure.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +33,7 @@ public static class ServiceContainer
         udp.RequireAuthenticatedUser();
         udp.RequireRole("User");
      });
+     services.AddScoped<IAccount, Account>();
      return services;
     
     
