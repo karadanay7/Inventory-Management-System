@@ -1,0 +1,25 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+
+@code {
+    [CascadingParameter]
+    public Task<AuthenticationState>? ClientAuthState { get; set; }
+      protected override async Task OnInitializedAsync()
+      {
+        try
+        {
+            await accountService.SetUpAsync();
+            if((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
+            Navigation.NavigateTo("app/home");
+            else 
+            Navigation.NavigateTo("/Account/login",false,true);
+           
+        }
+        catch 
+        {
+           Navigation.NavigateTo("/Account/login");
+        }
+      }
+
+}
