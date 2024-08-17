@@ -26,87 +26,153 @@ namespace Infrastructure.Repository
             var user = await FindUserByEmail(model.Email);
             if (user != null) return new ServiceResponse(false, "User already exists");
 
-            var newUser = new ApplicationUser
+            var newUser = new ApplicationUser()
             {
                 UserName = model.Email,
+                PasswordHash = model.Password,
                 Email = model.Email,
                 Name = model.Name
             };
 
-            var result = await _userManager.CreateAsync(newUser, model.Password);
-            if (!result.Succeeded) return CheckResult(result);
 
-            return await CreateUserClaims(newUser, model.Policy);
+            var result = CheckResult(await _userManager.CreateAsync(newUser, model.Password));
+            if (!result.Flag) return result;
+
+            else
+                return await CreateUserClaims(model);
         }
 
-        private async Task<ServiceResponse> CreateUserClaims(ApplicationUser user, string policy)
+        private async Task<ServiceResponse> CreateUserClaims(CreateUserRequestDTO model)
         {
-            if (string.IsNullOrEmpty(policy)) return new ServiceResponse(false, "No policy provided");
-
-            var userClaims = policy.Equals(Policy.AdminPolicy, StringComparison.OrdinalIgnoreCase)
-                ? new Claim[]
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
+            if (string.IsNullOrEmpty(model.Policy)) return new ServiceResponse(false, "No policy provided");
+            Claim[] userClaims = [];
+            if (model.Policy.Equals(Policy.AdminPolicy, StringComparison.OrdinalIgnoreCase))
+            {
+                userClaims = [
+                    new Claim(ClaimTypes.Email, model.Email),
                     new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim("Name", user.Name),
+                    new Claim("Name", model.Name),
                     new Claim("Create", "true"),
                     new Claim("Update", "true"),
                     new Claim("Delete", "true"),
                     new Claim("Read", "true"),
                     new Claim("ManageUser", "true")
-                }
-                : new Claim[]
-                {
-                    new Claim(ClaimTypes.Email, user.Email),
+                ];
+
+            }
+            else if (model.Policy.Equals(Policy.ManagerPolicy, StringComparison.OrdinalIgnoreCase))
+            {
+                userClaims = [
+                    new Claim(ClaimTypes.Email, model.Email),
+                    new Claim(ClaimTypes.Role, "Manager"),
+                    new Claim("Name", model.Name),
+                    new Claim("Create", "true"),
+                    new Claim("Update", "true"),
+                    new Claim("Delete", "true"),
+                    new Claim("Read", "true"),
+                    new Claim("ManageUser", "false")
+                ];
+
+            }
+            else if (model.Policy.Equals(Policy.UserPolicy, StringComparison.OrdinalIgnoreCase))
+            {
+                userClaims = [
+                    new Claim(ClaimTypes.Email, model.Email),
                     new Claim(ClaimTypes.Role, "User"),
-                    new Claim("Name", user.Name),
+                    new Claim("Name", model.Name),
                     new Claim("Create", "false"),
                     new Claim("Update", "false"),
                     new Claim("Delete", "false"),
-                    new Claim("Read", "false")
-                };
+                    new Claim("Read", "true"),
+                    new Claim("ManageUser", "false")
+                ];
 
-            var result = await _userManager.AddClaimsAsync(user, userClaims);
-            return CheckResult(result);
-        }
-
-        public async Task<IEnumerable<GetUserWithClaimResponseDTO>> GetUsersWithClaimsAsync()
-        {
-            var usersWithClaims = new List<GetUserWithClaimResponseDTO>();
-            var allUsers = await _userManager.Users.ToListAsync();
-
-            foreach (var user in allUsers)
-            {
-                var claims = await _userManager.GetClaimsAsync(user);
-                if (!claims.Any()) continue;
-
-                usersWithClaims.Add(new GetUserWithClaimResponseDTO
-                {
-                    UserId = user.Id,
-                    Email = claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
-                    RoleName = claims.FirstOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
-                    Name = claims.FirstOrDefault(x => x.Type == "Name")?.Value,
-                    ManageUser = Convert.ToBoolean(claims.FirstOrDefault(x => x.Type == "ManageUser")?.Value),
-                    Create = Convert.ToBoolean(claims.FirstOrDefault(x => x.Type == "Create")?.Value),
-                    Update = Convert.ToBoolean(claims.FirstOrDefault(x => x.Type == "Update")?.Value),
-                    Delete = Convert.ToBoolean(claims.FirstOrDefault(x => x.Type == "Delete")?.Value),
-                    Read = Convert.ToBoolean(claims.FirstOrDefault(x => x.Type == "Read")?.Value)
-                });
             }
 
-            return usersWithClaims;
+            var result = CheckResult(await _userManager.AddClaimsAsync((await FindUserByEmail(model.Email)), userClaims));
+            if (result.Flag) return new ServiceResponse(true, "User created successfully");
+            else
+                return result;
         }
 
         public async Task<ServiceResponse> LoginAsync(LoginUserRequestDTO model)
         {
+            
             var user = await FindUserByEmail(model.Email);
-            if (user == null) return new ServiceResponse(false, "User not found");
+            if (user is null) return new ServiceResponse(false, "User not found");
 
+            var verifyPassword = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+            if (!verifyPassword.Succeeded) return new ServiceResponse(false, "Incorrect Credentials");
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-            if (!result.Succeeded) return new ServiceResponse(false, "Invalid credentials");
-
-            return new ServiceResponse(true, "Login successful");
+            if (!result.Succeeded) return new ServiceResponse(false, "Unknown error occured");
+            else
+                return new ServiceResponse(true, "Login successful");
         }
+        private async Task<ApplicationUser> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
+        private async Task<ApplicationUser> FindUserById(string id) => await _userManager.FindByIdAsync(id);
+        private static ServiceResponse CheckResult(IdentityResult result)
+        {
+            if (result.Succeeded) return new ServiceResponse(true, null);
+            var errors = result.Errors.Select(e => e.Description);
+            return new ServiceResponse(false, string.Join(Environment.NewLine, errors));
+        }
+
+        public async Task<IEnumerable<GetUserWithClaimResponseDTO>> GetUsersWithClaimsAsync()
+        {
+            var  UsersList = new List<GetUserWithClaimResponseDTO>();
+            var allUsers = await _userManager.Users.ToListAsync();
+            if (allUsers.Count == 0) return UsersList;
+            foreach (var user in allUsers)
+            {
+               var currentUser = await _userManager.FindByIdAsync(user.Id);
+                var getCurrentUserClaims = await _userManager.GetClaimsAsync(currentUser);
+                if(getCurrentUserClaims.Any())
+                UsersList.Add(new GetUserWithClaimResponseDTO()
+                {
+                    UserId = user.Id,
+                    Email = getCurrentUserClaims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
+                    RoleName = getCurrentUserClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value,
+                    Name = getCurrentUserClaims.FirstOrDefault(c => c.Type == "Name")?.Value,
+                    ManageUser = Convert.ToBoolean(getCurrentUserClaims.FirstOrDefault(c => c.Type == "ManageUser")?.Value),
+                    Create = Convert.ToBoolean(getCurrentUserClaims.FirstOrDefault(c => c.Type == "Create")?.Value),
+                    Update = Convert.ToBoolean(getCurrentUserClaims.FirstOrDefault(c => c.Type == "Update")?.Value),
+                    Delete = Convert.ToBoolean(getCurrentUserClaims.FirstOrDefault(c => c.Type == "Delete")?.Value),
+                    Read = Convert.ToBoolean(getCurrentUserClaims.FirstOrDefault(c => c.Type == "Read")?.Value)
+
+                });
+                
+            }
+
+            return UsersList;
+        }
+         public async Task SetUpAsync()
+        {
+            try
+            {
+                var response = await CreateUserAsync(new CreateUserRequestDTO
+                {
+                    Name = "Administrator",
+                    Email = "admin@admin.com",
+                    Password = "Admin@123",
+                    Policy = Policy.AdminPolicy
+                });
+
+                if (response.Flag)
+                {
+                    Console.WriteLine("Administrator user created successfully.");
+                }
+                else
+                {
+                    Console.WriteLine($"Error creating administrator user: {response.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in SetUpAsync: {ex.Message}");
+            }
+        }
+
+
 
         public async Task<ServiceResponse> UpdateUserAsync(ChangeUserClaimRequestDTO model)
         {
@@ -133,41 +199,9 @@ namespace Infrastructure.Repository
             return CheckResult(addResult);
         }
 
-        private async Task<ApplicationUser> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
 
-        private static ServiceResponse CheckResult(IdentityResult result)
-        {
-            if (result.Succeeded) return new ServiceResponse(true, null);
-            var errors = result.Errors.Select(e => e.Description);
-            return new ServiceResponse(false, string.Join(Environment.NewLine, errors));
-        }
 
-        public async Task SetUpAsync()
-        {
-            try
-            {
-                var response = await CreateUserAsync(new CreateUserRequestDTO
-                {
-                    Name = "Administrator",
-                    Email = "admin@admin.com",
-                    Password = "Admin@123",
-                    Policy = Policy.AdminPolicy
-                });
-
-                if (response.Flag)
-                {
-                    Console.WriteLine("Administrator user created successfully.");
-                }
-                else
-                {
-                    Console.WriteLine($"Error creating administrator user: {response.Message}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception in SetUpAsync: {ex.Message}");
-            }
-        }
+       
 
     }
 }
