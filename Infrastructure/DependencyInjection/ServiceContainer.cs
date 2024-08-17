@@ -1,45 +1,57 @@
-using System;
-using Application.Extension.Identity;
 using Application.Interface.Identity;
-using Infrastructure.DataAccess;
-using Infrastructure.Repository;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Application.Service;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Infrastructure.DataAccess;
+using Infrastructure.Repository;
+using Application.Extension.Identity;
 
-namespace Infrastructure.DependencyInjection;
-
-public static class ServiceContainer
+namespace Infrastructure.DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration config)
+    public static class ServiceContainer
     {
-        services.AddDbContext<AppDbContext>(o => o.UseNpgsql(config.GetConnectionString("DefaultConnection")), ServiceLifetime.Scoped);
-
-        services.AddAuthentication(options =>
+        public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration config)
         {
-            options.DefaultScheme = IdentityConstants.ApplicationScheme;
-            options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-        }).AddIdentityCookies();
+            // Register DbContext with the correct connection string
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(config.GetConnectionString("DefaultConnection")),
+                ServiceLifetime.Scoped);
 
-        services.AddIdentityCore<ApplicationUser>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddSignInManager()
-            .AddDefaultTokenProviders();
+            // Configure authentication and identity services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            }).AddIdentityCookies();
 
-        services.AddAuthorizationBuilder().AddPolicy("AdministrationPolicy", adp =>
-        {
-            adp.RequireAuthenticatedUser();
-            adp.RequireRole("Admin", "Manager");
-        }).AddPolicy("UserPolicy", udp =>
-        {
-            udp.RequireAuthenticatedUser();
-            udp.RequireRole("User");
-        });
+            services.AddIdentityCore<ApplicationUser>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
 
-        services.AddCascadingAuthenticationState();
-        services.AddScoped<IAccount, Account>();
+            // Configure authorization policies
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdministrationPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole("Admin", "Manager");
+                });
 
-        return services;
+                options.AddPolicy("UserPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireRole("User");
+                });
+            });
+
+            // Register custom services
+            services.AddScoped<IAccount, Account>(); // Ensure this line is present
+            services.AddScoped<IAccountService, AccountService>(); // Ensure this line is present
+
+            return services;
+        }
     }
 }

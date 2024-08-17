@@ -11,6 +11,7 @@ public interface IAccountService
     Task<IEnumerable<GetUserWithClaimResponseDTO>> GetUsersWithClaimsAsync();
     Task SetUpAsync();
     Task<ServiceResponse> UpdateUserAsync(ChangeUserClaimRequestDTO model);
+
     // Task SaveActivityAsync(ActivityTrackerRequestDTO model);
     // Task <IEnumerable<ActivityTrackerResponseDTO>> GetActivitiesAsync();
     

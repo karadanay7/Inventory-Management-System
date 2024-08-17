@@ -23,7 +23,7 @@ namespace Infrastructure.Repository
 
         public async Task<ServiceResponse> CreateUserAsync(CreateUserRequestDTO model)
         {
-            var user = await FindUserByEmail(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null) return new ServiceResponse(false, "User already exists");
 
             var newUser = new ApplicationUser()
@@ -89,16 +89,17 @@ namespace Infrastructure.Repository
 
             }
 
-            var result = CheckResult(await _userManager.AddClaimsAsync((await FindUserByEmail(model.Email)), userClaims));
+            var result = CheckResult(await _userManager.AddClaimsAsync((await _userManager.FindByEmailAsync(model.Email)), userClaims));
             if (result.Flag) return new ServiceResponse(true, "User created successfully");
             else
                 return result;
         }
+        public async Task<ApplicationUser> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
 
         public async Task<ServiceResponse> LoginAsync(LoginUserRequestDTO model)
         {
             
-            var user = await FindUserByEmail(model.Email);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             if (user is null) return new ServiceResponse(false, "User not found");
 
             var verifyPassword = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
@@ -108,7 +109,7 @@ namespace Infrastructure.Repository
             else
                 return new ServiceResponse(true, "Login successful");
         }
-        private async Task<ApplicationUser> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
+
         private async Task<ApplicationUser> FindUserById(string id) => await _userManager.FindByIdAsync(id);
         private static ServiceResponse CheckResult(IdentityResult result)
         {
