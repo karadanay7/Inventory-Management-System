@@ -4,31 +4,36 @@
 @inject IAccountService accountService
 @inject NavigationManager Navigation
 
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <h1 class="text-2xl font-semibold mb-6">Login</h1>
-        <EditForm Model="LoginModel" OnValidSubmit="LoginAsync">
-            <DataAnnotationsValidator/>
-            <ValidationSummary class="mb-4"/>
+<div class="min-h-screen flex items-center justify-center ">
+    <div class="w-full max-w-md p-8  rounded-lg shadow-lg">
+        <h1 class="text-2xl font-semibold mb-6 text-center ">Login</h1>
+        <EditForm Model="LoginModel" OnValidSubmit="LoginAsync" FormName="login" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="mb-4" />
 
             <div class="mb-4">
-                <InputText @bind-Value="LoginModel.Email" class="input input-bordered w-full" placeholder="E-mail"/>
-                <label for="email" class="label">E-mail</label>
+                <label class="label">E-mail</label>
+                <InputText @bind-Value="LoginModel.Email" class="input input-bordered w-full" placeholder="E-mail" />
+
             </div>
             <div class="mb-4">
-                <InputText @bind-Value="LoginModel.Password" class="input input-bordered w-full" type="password" placeholder="Password"/>
-                <label for="password" class="label">Password</label>
-            </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="btn btn-primary w-full">Login</button>
-            </div>
+                <label class="label">Password</label>
+                <InputText @bind-Value="LoginModel.Password" class="input input-bordered w-full" type="password"
+                    placeholder="Password" />
 
-            @if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                <div class="alert alert-error mt-4">
-                    @ErrorMessage
-                </div>
-            }
+            </div>
+            <div class="flex items-center justify-center  ">
+
+                <button class="btn btn-neutral w-full " type="submit">Login</button>
+            </div>
+            <div>
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-error mt-4">
+                        @ErrorMessage
+                    </div>
+                }
+            </div>
         </EditForm>
     </div>
 </div>
@@ -36,7 +41,7 @@
 @code {
     string ErrorMessage = "";
     public bool IsBusy { get; set; } = false;
-    private LoginUserRequestDTO LoginModel { get; set; } = new ();
+    private LoginUserRequestDTO LoginModel { get; set; } = new();
 
     private async Task LoginAsync()
     {
@@ -51,7 +56,7 @@
             return;
         }
         IsBusy = false;
-        Navigation.NavigateTo("app/home", true);
+        Navigation.NavigateTo(uri:"app/home", true);
     }
 
     [CascadingParameter]
@@ -59,12 +64,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try 
+        try
         {
             if ((await ClientAuthState!).User.Identity!.IsAuthenticated)
                 Navigation.NavigateTo("app/home", false, true);
         }
-        catch 
+        catch
         {
             // Optionally handle exceptions
         }

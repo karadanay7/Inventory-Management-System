@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Infrastructure.DataAccess;
 using WebUI.Components.Layout.Identity;
 using Microsoft.AspNetCore.Components.Authorization;
+using Application.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,14 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
+        await accountService.SetUpAsync();
+    }
 }
 app.MapSignOutEndpoint();
 
