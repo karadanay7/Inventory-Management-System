@@ -7,7 +7,7 @@
 <div class="min-h-screen flex items-center justify-center ">
     <div class="w-full max-w-md p-8 rounded-lg shadow-lg">
         <h1 class="text-2xl font-semibold mb-6 text-center">Login</h1>
-        <EditForm Model="@LoginModel" OnSubmit="LoginAsync" FormName="loginform">
+        <EditForm Model="@LoginModel" method="post" OnValidSubmit="LoginAsync" FormName="loginform">
             <DataAnnotationsValidator />
             <ValidationSummary class="mb-4" />
 
@@ -36,23 +36,30 @@
 @code {
     string ErrorMessage = "";
     public bool IsBusy { get; set; } = false;
+    
+    [SupplyParameterFromForm]
     private LoginUserRequestDTO LoginModel { get; set; } = new();
 
-    private async Task LoginAsync()
+  private async Task LoginAsync()
+{
+    if (IsBusy) return;
+    ErrorMessage = "";
+    IsBusy = true;
+    
+    Console.WriteLine($"Attempting login with Email: {LoginModel.Email} and Password: {LoginModel.Password}");
+
+    var response = await accountService.LoginAsync(LoginModel);
+    
+    if (!response.Flag)
     {
-        if (IsBusy) return;
-        ErrorMessage = "";
-        IsBusy = true;
-        var response = await accountService.LoginAsync(LoginModel);
-        if (!response.Flag)
-        {
-            IsBusy = false;
-            ErrorMessage = response.Message;
-            return;
-        }
         IsBusy = false;
-        Navigation.NavigateTo("app/home");
+        ErrorMessage = response.Message;
+        return;
     }
+    
+    IsBusy = false;
+    Navigation.NavigateTo(uri:"app/home",true);
+}
 
     [CascadingParameter]
     public Task<AuthenticationState>? ClientAuthState { get; set; }
@@ -63,6 +70,8 @@
         {
             if ((await ClientAuthState!).User.Identity!.IsAuthenticated)
                 Navigation.NavigateTo("app/home", false, true);
+                else
+                Navigation.NavigateTo("/Account/login", false, true);
         }
         catch
         {

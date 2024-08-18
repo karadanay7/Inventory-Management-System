@@ -10,16 +10,16 @@
       {
         try
         {
-            await accountService.SetUpAsync();
+           
             if((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
-            Navigation.NavigateTo("app/home");
+            Navigation.NavigateTo("app/home", false, true);
             else 
             Navigation.NavigateTo("/Account/login",false,true);
            
         }
         catch 
         {
-           Navigation.NavigateTo("/Account/login");
+           Navigation.NavigateTo("/Account/login", false, true);
         }
       }
 

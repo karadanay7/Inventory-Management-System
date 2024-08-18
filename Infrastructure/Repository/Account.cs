@@ -96,19 +96,23 @@ namespace Infrastructure.Repository
         }
         public async Task<ApplicationUser> FindUserByEmail(string email) => await _userManager.FindByEmailAsync(email);
 
-        public async Task<ServiceResponse> LoginAsync(LoginUserRequestDTO model)
-        {
-            
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user is null) return new ServiceResponse(false, "User not found");
+     public async Task<ServiceResponse> LoginAsync(LoginUserRequestDTO model)
+{
+   
 
-            var verifyPassword = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-            if (!verifyPassword.Succeeded) return new ServiceResponse(false, "Incorrect Credentials");
-            var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
-            if (!result.Succeeded) return new ServiceResponse(false, "Unknown error occured");
-            else
-                return new ServiceResponse(true, "Login successful");
-        }
+    var user = await _userManager.FindByEmailAsync(model.Email);
+    if (user == null) return new ServiceResponse(false, "User not found");
+
+    var verifyPassword = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+    if (!verifyPassword.Succeeded) return new ServiceResponse(false, "Incorrect Credentials");
+
+    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
+    if (!result.Succeeded) return new ServiceResponse(false, "Unknown error occurred");
+
+    return new ServiceResponse(true, "Login successful");
+}
+
+
 
         private async Task<ApplicationUser> FindUserById(string id) => await _userManager.FindByIdAsync(id);
         private static ServiceResponse CheckResult(IdentityResult result)

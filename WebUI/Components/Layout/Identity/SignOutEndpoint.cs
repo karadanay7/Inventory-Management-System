@@ -10,7 +10,7 @@ internal static class SignOutEndpoint
     public static IEndpointConventionBuilder MapSignOutEndpoint(this IEndpointRouteBuilder endpoint)
     {
         ArgumentNullException.ThrowIfNull(endpoint);
-        var accountGroup = endpoint.MapGroup("/account");
+        var accountGroup = endpoint.MapGroup("/Account");
         accountGroup.MapPost("/Logout", async (ClaimsPrincipal user , SignInManager<ApplicationUser> signInManager) =>
         {
             await signInManager.SignOutAsync();

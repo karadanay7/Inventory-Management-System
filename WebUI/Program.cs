@@ -13,30 +13,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureService(builder.Configuration);
 builder.Services.AddApplicationService();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthStateProvider>();
-
-
+builder.Logging.AddConsole();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
+// Test database connection
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var canConnect = await dbContext.TestConnectionAsync();
+    if (canConnect)
+    {
+        Console.WriteLine("Database connection successful.");
+    }
+    else
+    {
+        Console.WriteLine("Database connection failed.");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-if (app.Environment.IsDevelopment())
-{
-    using (var scope = app.Services.CreateScope())
-    {
-        var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
-        await accountService.SetUpAsync();
-    }
-}
-app.MapSignOutEndpoint();
 
 app.UseHttpsRedirection();
 
@@ -45,5 +49,5 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
+app.MapSignOutEndpoint();
 app.Run();

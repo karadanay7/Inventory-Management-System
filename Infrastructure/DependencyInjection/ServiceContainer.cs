@@ -47,9 +47,10 @@ namespace Infrastructure.DependencyInjection
                 });
             });
 
+            services.AddCascadingAuthenticationState();
             // Register custom services
             services.AddScoped<IAccount, Account>(); // Ensure this line is present
-            services.AddScoped<IAccountService, AccountService>(); // Ensure this line is present
+    
 
             return services;
         }

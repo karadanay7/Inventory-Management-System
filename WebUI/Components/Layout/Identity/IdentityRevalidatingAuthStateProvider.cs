@@ -13,7 +13,7 @@ internal sealed class IdentityRevalidatingAuthStateProvider(ILoggerFactory logge
  IServiceScopeFactory scopeFactory, IOptions<IdentityOptions> options)
   : RevalidatingServerAuthenticationStateProvider(loggerFactory)
 {
-  protected override TimeSpan RevalidationInterval => TimeSpan.FromSeconds(20);
+  protected override TimeSpan RevalidationInterval => TimeSpan.FromSeconds(30);
 
   protected async override Task<bool> ValidateAuthenticationStateAsync(
     AuthenticationState authenticationState, CancellationToken cancellationToken)
