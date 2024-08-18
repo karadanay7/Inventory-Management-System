@@ -1,6 +1,8 @@
 using Application.Extension.Identity;
+using Domain.Entities.ActivityTracker;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Infrastructure.DataAccess
 {
@@ -8,7 +10,9 @@ namespace Infrastructure.DataAccess
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+       
         }
+            public DbSet<Tracker> ActivityTracker { get; set; }
 
         public async Task<bool> TestConnectionAsync()
         {
