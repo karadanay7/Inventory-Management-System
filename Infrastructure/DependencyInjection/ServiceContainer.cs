@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Infrastructure.DataAccess;
 using Infrastructure.Repository;
 using Application.Extension.Identity;
+using Application.Service.Products.Commands.Products;
 
 namespace Infrastructure.DependencyInjection
 {
@@ -50,9 +51,11 @@ namespace Infrastructure.DependencyInjection
             services.AddCascadingAuthenticationState();
             // Register custom services
             services.AddScoped<IAccount, Account>(); // Ensure this line is present
-    
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CreateProductCommand).Assembly));
+            services.AddScoped<DataAccess.IDbContextFactory<AppDbContext>, DbContextFactory<AppDbContext>>();
 
             return services;
         }
     }
 }
+ 
