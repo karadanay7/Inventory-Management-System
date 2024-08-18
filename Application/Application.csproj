@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="DTO/Request/ActivityTracker/" />
+    <Folder Include="DTO/Request/Products/" />
   </ItemGroup>
 
 </Project>

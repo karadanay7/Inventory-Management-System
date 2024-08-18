@@ -10,7 +10,7 @@
       {
         try
         {
-           
+           await accountService.SetUpAsync();
             if((await ClientAuthState!).User.Identity!.IsAuthenticated == true)
             Navigation.NavigateTo("app/home", false, true);
             else 
