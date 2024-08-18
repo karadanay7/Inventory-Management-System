@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="DTO/Request/ActivityTracker/" />
-    <Folder Include="Service/Products/Queries/" />
   </ItemGroup>
 
 </Project>
