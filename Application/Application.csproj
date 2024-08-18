@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="DTO/Request/ActivityTracker/" />
-    <Folder Include="Service/Products/Commands/Locations/" />
     <Folder Include="Service/Products/Commands/Products/" />
     <Folder Include="Service/Products/Queries/" />
   </ItemGroup>
