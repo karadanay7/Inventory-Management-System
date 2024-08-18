@@ -7,6 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Application.Interface.Identity;
 using Application.DTO.Response.Identity;
 using Application.Extension.Identity;
+using Application.DTO.Request;
+using Application.DTO.Response.ActivityTracker;
+using Infrastructure.DataAccess;
+using Mapster;
+using Domain.Entities.ActivityTracker;
 
 namespace Infrastructure.Repository
 {
@@ -14,11 +19,13 @@ namespace Infrastructure.Repository
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly AppDbContext _context;
 
-        public Account(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public Account(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AppDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public async Task<ServiceResponse> CreateUserAsync(CreateUserRequestDTO model)
@@ -204,9 +211,23 @@ namespace Infrastructure.Repository
             return CheckResult(addResult);
         }
 
-
-
-       
-
+    public  async Task SaveActivityAsync(ActivityTrackerRequestDTO model)
+    {
+        _context.ActivityTracker.Add(model.Adapt(new Tracker()));
+        await _context.SaveChangesAsync();
+      
     }
+
+    public async Task<IEnumerable<ActivityTrackerResponseDTO>> GetActivitiesAsync()
+    {
+      var list = new List<ActivityTrackerResponseDTO>();
+      var data = (await _context.ActivityTracker.ToListAsync()).Adapt<List<ActivityTrackerResponseDTO>>();
+      foreach (var activity in data)
+      {
+       activity.UserName = (await FindUserById(activity.UserId)).Name;
+         list.Add(activity);
+      }
+        return data;
+    }
+  }
 }
