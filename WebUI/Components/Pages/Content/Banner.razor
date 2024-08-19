@@ -1,0 +1,195 @@
+﻿@using Application.DTO.Response.Orders
+@using Application.Service.Orders
+@inject IServiceProvider serviceProvider
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    <!-- Admin Section -->
+    <AuthorizeView Policy="AdministrationPolicy">
+        <div>
+            <h3 class="text-2xl font-semibold mb-4">Admin Overview</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Total Amount Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            $ @AdminTotalAmountOfOrderedProduct.ToString("#,##0.00")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Orders</p>
+                        <span class="text-xl font-bold text-primary">
+                            $ @AdminOnlyTodayOrderedProducts.ToString("#,##0.00")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Orders %</p>
+                        <span class="text-xl font-bold text-primary">
+                            @AdminTodayOrdersPercentage.ToString("P")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Gross Quantities Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            @AdminGrossProductsQuantitiesOrdered
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Quantities Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            @AdminTodayProductsQuantitiesOrdered
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Last Month’s Orders %</p>
+                        <span class="text-xl font-bold text-primary">
+                            @AdminLastMonthProductOrderedPercentageOverAll.ToString("P")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+
+    <!-- User Section -->
+    <AuthorizeView Policy="@Policy.UserPolicy">
+        <div>
+            <h3 class="text-2xl font-semibold mb-4">User Overview</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Total Amount Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            $ @ClientTotalAmountOfOrderedProduct.ToString("#,##0.00")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Orders</p>
+                        <span class="text-xl font-bold text-primary">
+                            $ @ClientOnlyTodayOrderedProducts.ToString("#,##0.00")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Orders %</p>
+                        <span class="text-xl font-bold text-primary">
+                            @ClientTodayOrdersPercentage.ToString("P")
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Gross Quantities Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            @ClientGrossProductsQuantitiesOrdered
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Today’s Quantities Ordered</p>
+                        <span class="text-xl font-bold text-primary">
+                            @ClientTodayProductsQuantitiesOrdered
+                        </span>
+                    </div>
+                </div>
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body">
+                        <p class="text-lg font-semibold">Last Month’s Orders %</p>
+                        <span class="text-xl font-bold text-primary">
+                            @ClientLastMonthProductOrderedPercentageOverAll.ToString("P")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+
+</div>
+@code{
+    [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+        private IEnumerable<GetOrderResponseDTO> UserOrders = [];
+        private IEnumerable<GetOrderResponseDTO> AdminOrders = [];
+            ClaimsPrincipal? User;
+            private decimal ClientTotalAmountOfOrderedProduct ;
+            private decimal ClientOnlyTodayOrderedProducts;
+            private decimal ClientTodayOrdersPercentage;
+            private int ClientGrossProductsQuantitiesOrdered;
+            private int ClientTodayProductsQuantitiesOrdered;
+            private decimal ClientTotalAmountOfProductOrderedLastMonth;
+            private decimal ClientLastMonthProductOrderedPercentageOverAll;
+
+            private decimal AdminTotalAmountOfOrderedProduct ;
+            private decimal AdminOnlyTodayOrderedProducts;
+            private decimal AdminTodayOrdersPercentage;
+            private int AdminGrossProductsQuantitiesOrdered;
+            private int AdminTodayProductsQuantitiesOrdered;
+            private decimal AdminTotalAmountOfProductOrderedLastMonth;
+            private decimal AdminLastMonthProductOrderedPercentageOverAll;
+
+
+            protected override async Task OnInitializedAsync()
+            {
+              await LoadDefaults();
+            }
+            async Task LoadDefaults()
+            {
+               try{
+                User = (await UserAuthState!).User;
+                if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value.Equals("User", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                    using var scope = serviceProvider.CreateScope();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        UserOrders = await mediator.Send(new GetOrdersByUserIdQuery(userId));
+                        GetClientSections();
+                }
+                else if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    using var scope = serviceProvider.CreateScope();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        AdminOrders = await mediator.Send(new GetAllOrders());
+                        GetAdminSections();
+                }
+               
+               }
+                catch(Exception ex)
+                {
+                     Console.WriteLine(ex.Message);
+                }
+                void GetAdminSections()
+                {
+                    AdminTotalAmountOfOrderedProduct = AdminOrders.Sum(x => x.TotalAmount);
+                    AdminOnlyTodayOrderedProducts = AdminOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    AdminTodayOrdersPercentage = AdminOnlyTodayOrderedProducts / AdminTotalAmountOfOrderedProduct * 100;
+                    AdminGrossProductsQuantitiesOrdered = AdminOrders.Sum(x => x.Quantity);
+                    AdminTodayProductsQuantitiesOrdered = AdminOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.Quantity);
+                    AdminTotalAmountOfProductOrderedLastMonth = AdminOrders.Where(x => x.CreatedAt.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    AdminLastMonthProductOrderedPercentageOverAll = AdminTotalAmountOfProductOrderedLastMonth / AdminTotalAmountOfOrderedProduct * 100;
+                }
+                void GetClientSections()
+                {
+                    ClientTotalAmountOfOrderedProduct = UserOrders.Sum(x => x.TotalAmount);
+                    ClientOnlyTodayOrderedProducts = UserOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    ClientTodayOrdersPercentage = ClientOnlyTodayOrderedProducts / ClientTotalAmountOfOrderedProduct * 100;
+                    ClientGrossProductsQuantitiesOrdered = UserOrders.Sum(x => x.Quantity);
+                    ClientTodayProductsQuantitiesOrdered = UserOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.Quantity);
+                    ClientTotalAmountOfProductOrderedLastMonth = UserOrders.Where(x => x.CreatedAt.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    ClientLastMonthProductOrderedPercentageOverAll = ClientTotalAmountOfProductOrderedLastMonth / ClientTotalAmountOfOrderedProduct * 100;
+                }
+            }
+
+}

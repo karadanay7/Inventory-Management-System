@@ -1,0 +1,53 @@
+﻿@page "/administration/account/create-user"
+@rendermode InteractiveServer
+@implements IDisposable
+<PageTitle>Add User</PageTitle>
+
+<ThreeSectionsTemplate>
+    <Col9Template>
+    <AdminHomeHeader/>
+    <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" ReloadPageOnClick="true">
+        <div>
+            <EditForm Model="UserModel" OnInvalidSubmit="RegisterAsync">
+                <DataAnnotationsValidator />
+                <FloatingText Label="Full Name"></FloatingText>
+                 <FloatingText Label="E mail"></FloatingText>
+                 <InputSelect @bind-Value="UserModel.Policy">
+                 <option value="">Select Policy</option>
+                 @foreach (var policy in Policies)
+                 {
+                     <option value="@policy">@policy</option>
+                 }
+                 </InputSelect>
+
+            </EditForm>
+        </div>
+    </NetcodeHubBreadCrumb>
+    </Col9Template>
+    <Col3Template>
+    <Banner/>
+    </Col3Template>
+    <FooterTemplate><Footer/></FooterTemplate>
+</ThreeSectionsTemplate>
+<NetcodeHubToast @ref="ToastComponent" Duration="4000"/>
+
+@code
+{
+    private Dictionary<string, string> BreadCrumbs = new Dictionary<string, string>
+    {
+        { "Home", "/app/home" },
+     
+        { "Add New User", null! }
+    };
+    [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+        private CreateUserRequestDTO UserModel { get; set; } = new ();
+        NetcodeHubToast? ToastComponent;
+        private bool Loading = false;
+        private List<string> Policies = new List<string> 
+            {
+                new string(Policy.AdminPolicy),
+                new string(Policy.UserPolicy),
+                new string(Policy.ManagerPolicy)
+
+            }
+}
