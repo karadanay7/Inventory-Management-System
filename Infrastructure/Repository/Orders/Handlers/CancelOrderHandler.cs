@@ -19,9 +19,9 @@ public class CancelOrderHandler(DataAccess.IDbContextFactory<AppDbContext> conte
             using var dbContext = contextFactory.CreateDbContext();
             var order = await dbContext.Orders.Where(x => x.Id == request.OrderId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
             if (order == null) return new ServiceResponse(true, "Order not found");
-          order.OrderState = OrderState.Canceled;
+          order.OrderState = OrderState.Cancelled;
             await dbContext.SaveChangesAsync(cancellationToken);
-            return new ServiceResponse(false, "Order canceled successfully");
+            return new ServiceResponse(false, "Order cancelled successfully");
            
         }
         catch (Exception ex)

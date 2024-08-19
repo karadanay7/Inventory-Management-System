@@ -1,6 +1,8 @@
 ﻿@rendermode InteractiveServer
 @implements IDisposable
 @inject UserActiveOrderCountState userState 
+@using WebUI.States.Administration
+@inject GenericHomeHeaderState homeGenericState
 
 <div>
     <h3>Hi, Welcome Back</h3>
@@ -20,7 +22,7 @@
             <span>@userState.DeliveredCount</span>
            Delivered
         </button>
-           <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Canceled, true))">
+           <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Cancelled, true))">
             <i></i>
             <span>@userState.CancelledCount</span>
            Cancelled

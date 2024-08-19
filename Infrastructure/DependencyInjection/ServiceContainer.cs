@@ -8,6 +8,7 @@ using Infrastructure.DataAccess;
 using Infrastructure.Repository;
 using Application.Extension.Identity;
 using Application.Service.Products.Commands.Products;
+using Infrastructure.Repository.Orders.Handlers;
 
 namespace Infrastructure.DependencyInjection
 {
@@ -52,6 +53,7 @@ namespace Infrastructure.DependencyInjection
             // Register custom services
             services.AddScoped<IAccount, Account>(); // Ensure this line is present
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CreateProductCommand).Assembly));
+               services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetGenericOrdersCountHandler).Assembly));
             services.AddScoped<DataAccess.IDbContextFactory<AppDbContext>, DbContextFactory<AppDbContext>>();
 
             return services;

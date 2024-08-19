@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository.Orders.Handlers;
 
-public class GetGenericORdersCountHandler(DataAccess.IDbContextFactory<AppDbContext> contextFactory) : IRequestHandler<GetGenericOrdersCountQuery, GetOrdersCountResponseDTO>
+public class GetGenericOrdersCountHandler(DataAccess.IDbContextFactory<AppDbContext> contextFactory) : IRequestHandler<GetGenericOrdersCountQuery, GetOrdersCountResponseDTO>
 {
   public async Task<GetOrdersCountResponseDTO> Handle(GetGenericOrdersCountQuery request, CancellationToken cancellationToken)
   {
@@ -22,8 +22,8 @@ public class GetGenericORdersCountHandler(DataAccess.IDbContextFactory<AppDbCont
     int ProcessingCount = list.Count(x => x.OrderState == OrderState.Processing);
     int DeliveredCount = list.Count(x => x.OrderState == OrderState.Delivered);
     int DeliveringCount = list.Count(x => x.OrderState == OrderState.Delivering);
-    int CanceledCount = list.Count(x => x.OrderState == OrderState.Canceled);
-    return new GetOrdersCountResponseDTO(ProcessingCount, DeliveredCount, DeliveringCount, CanceledCount);
+    int CancelledCount = list.Count(x => x.OrderState == OrderState.Cancelled);
+    return new GetOrdersCountResponseDTO(ProcessingCount, DeliveredCount, DeliveringCount, CancelledCount);
     
   }
 }

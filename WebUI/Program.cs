@@ -13,6 +13,8 @@ using WebUI.Hubs;
 using Syncfusion.Blazor;
 using NetcodeHub.Packages.Components.DataGrid;
 using MudBlazor.Services;
+using MediatR;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,8 @@ builder.Services.AddScoped<NetcodeHubConnectionService>();
 builder.Services.AddScoped<ICustomAuthorizationService, CustomAuthorizationService>();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddVirtualizationService();
+
+
 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ4NjMzQDMxMzgyZTM0MmUzMGJk");
 builder.Services.AddMudServices();
 builder.Services.AddSignalR();
@@ -45,6 +49,12 @@ builder.Logging.AddConsole();
 var app = builder.Build();
 
 // Test database connection
+var serviceProvider = builder.Services.BuildServiceProvider();
+var mediator = serviceProvider.GetService<IMediator>();
+if (mediator == null)
+{
+    Console.WriteLine("IMediator is not registered.");
+}
 
 
 // Configure the HTTP request pipeline.

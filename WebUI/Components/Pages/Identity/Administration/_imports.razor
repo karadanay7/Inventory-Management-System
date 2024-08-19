@@ -15,8 +15,9 @@
 @using Microsoft.AspNetCore.SignalR.Client
 @using WebUI.States.Administration
 
+
 @inject IAccountService accountService
-@inject GenericHomeHeaderState genericHomeHeaderState
+@inject GenericHomeHeaderState homeGenericState
 @inject AdminActiveOrderCountState adminActiveOrderCountState
 @layout MainLayout
 @attribute [Authorize(Policy = "AdministrationPolicy")]

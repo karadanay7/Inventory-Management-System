@@ -10,12 +10,12 @@
 <ThreeSectionsTemplate>
     <Col9Template>
     <AdminHomeHeader/>
-    <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" ReloadPageOnClick="true">
+
         <div>
-            <EditForm Model="UserModel" OnInvalidSubmit="RegisterAsync">
+            <EditForm Model="@UserModel" OnInvalidSubmit="RegisterAsync">
                 <DataAnnotationsValidator />
-                <FloatingText Label="Full Name"></FloatingText>
-                 <FloatingText Label="E mail"></FloatingText>
+                <InputText @bind-Value="UserModel.Name" Label="Full Name"></InputText>
+                 <InputText  @bind-Value="UserModel.Email" Label="Email"></InputText>
                  <InputSelect @bind-Value="UserModel.Policy">
                  <option value="">Select Policy</option>
                  @foreach (var policy in Policies)
@@ -23,8 +23,8 @@
                      <option value="@policy">@policy</option>
                  }
                  </InputSelect>
-                 <FloatingText Label="User Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></FloatingText>
-                 <FloatingText Label="Confirm Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></FloatingText>
+                 <InputText Label="User Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></InputText>
+                 <InputText Label="Confirm Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></InputText>
                  <a href="" @onclick="ChangePasswordType"><small>@passwordState.DisplayText</small></a>
                  <div>
                     @if (Loading)
@@ -39,7 +39,7 @@
 
             </EditForm>
         </div>
-    </NetcodeHubBreadCrumb>
+
     </Col9Template>
     <Col3Template>
     <Banner/>
