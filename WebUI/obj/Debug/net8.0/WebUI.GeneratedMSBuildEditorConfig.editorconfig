@@ -93,6 +93,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9BZGRVc2VyUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/Administration/ManageUsersPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9NYW5hZ2VVc2Vyc1BhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/Administration/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
