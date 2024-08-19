@@ -1,0 +1,98 @@
+﻿@using WebUI.Components.Layout
+
+<AuthorizeView>
+    <li>
+        <a href="app/home"></a>
+        <i></i>
+        <span>home</span>
+    </li>
+</AuthorizeView>
+<AuthorizeView Policy="AdministrationPolicy"> 
+    @if(CanManageUser)
+    {
+        <li>
+            <a href="#expand-user">
+                 <i></i>
+            <span>User Management</span>
+            <i></i>
+            </a>
+            <div>
+                <ul>
+                    <li>
+                        <a href="administration/account/create-user">Add User</a>
+                    </li>
+                    <li>
+                        <a href="administration/account/manage-user">Manage User</a>
+                    </li>
+                     <li>
+                        <a href="administration/account/user-management-update">Update User</a>
+                    </li>
+                    
+                </ul>
+            </div>
+           
+        </li>
+    }
+    <li>
+        <a href="#expand-product">
+            <i></i>
+            <span>Product Management</span>
+            <i></i>
+        </a>
+        <div>
+            <ul>
+                <li>
+                    <a href="app/products/manage">Products</a>
+                </li>
+                <li>
+                    <a href="app/products/category/manage">Categories</a>
+                </li>
+                 <li>
+                    <a href="app/products/location/manage">Locations</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+    @* Admin Orders *@
+    <li>
+        <a href="app/administration/products/orders">
+        <i></i>
+        <span>Orders</span>
+        </a>
+     </li>
+</AuthorizeView>
+<AuthorizeView Policy="@Policy.UserPolicy"> 
+<li>
+    <a href="app/products/orders">
+    <i></i>
+    <span>My Orders</span>
+    </a>
+</li>
+</AuthorizeView>
+<AuthorizeView>
+    <MudBlazor.MudDivider class="mt-5"/>
+    <li>
+        <div>
+            <div>
+                <p>System Ifo</p>
+            </div>
+            <ul>
+                <li>
+                    <a >Version 1.0.0</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+
+</AuthorizeView>
+
+@code
+{
+     [CascadingParameter] public Task<AuthenticationState>? myState { get; set; }
+        bool CanManageUser = false;
+        protected override async Task OnInitializedAsync()
+        {
+            CanManageUser = customAuthorizationService.CustomClaimChecker((await myState!).User, DefaultClaims.ManageUser);
+        }
+
+}

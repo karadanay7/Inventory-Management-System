@@ -1,0 +1,9 @@
+﻿@rendermode InteractiveServer
+<img src="logo.png" alt="logo" width="30" @onclick="NavigationHome"/>
+
+@code {
+void NavigationHome()
+{
+    Navigation.NavigateTo("/");
+}
+}

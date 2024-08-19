@@ -9,5 +9,30 @@
 @using WebUI
 @using WebUI.Components
 @using Microsoft.AspNetCore.Components.Authorization
-@inject NavigationManager Navigation
+
 @using Microsoft.AspNetCore.Authorization
+@using Application.DTO.Request.Identity
+@using NetcodeHub.Packages.Components.Validations.OnInput
+@using NetcodeHub.Packages.Components
+@using NetcodeHub.Packages.Components.BreadCrumb
+@using NetcodeHub.Packages.Components.Modal
+@using Syncfusion.Blazor.Navigations
+@using System.Security.Claims
+@using Application.Extension
+@using Microsoft.AspNetCore.SignalR.Client
+@using Application.Service.Products.Commands
+@using Application.Service
+@using WebUI.Components.Layout.Identity
+
+
+@using Application.Service.Orders.Queries
+
+
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthState 
+
+@inject IAccountService accountService
+@inject IServiceProvider serviceProvider 
+@inject IJSRuntime js 
+@inject ICustomAuthorizationService customAuthorizationService
+

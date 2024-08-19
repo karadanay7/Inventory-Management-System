@@ -1,0 +1,34 @@
+﻿@using System.Security.Claims
+
+<li class="dropdown dropdown-hover">
+    <a tabindex="0" class="btn btn-ghost">
+        <i class="fas fa-user"></i> <!-- Placeholder for user icon -->
+        <span class="ml-2">@Name</span>
+    </a>
+    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+        <li>
+            <form action="Account/logout" method="post">
+                <AntiforgeryToken />
+                <button type="submit" class="btn btn-error btn-block">
+                    <i class="fas fa-sign-out-alt"></i> <!-- Placeholder for logout icon -->
+                    Logout
+                </button>
+            </form>
+        </li>
+    </ul>
+</li>
+
+@code 
+{
+    [CascadingParameter] public Task<AuthenticationState>? UserState { get; set; }
+    string? Name;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Name = (await UserState!).User.Claims.FirstOrDefault(c => c.Type == "Name")!.Value;
+        }
+        catch { }
+    }
+}

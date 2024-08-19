@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddInfrastructureService(builder.Configuration);
 builder.Services.AddApplicationService();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthStateProvider>();
+builder.Services.AddScoped<ICustomAuthorizationService, CustomAuthorizationService>();
 builder.Logging.AddConsole();
 
 builder.Services.AddRazorComponents()
