@@ -61,6 +61,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/General/GenericSpinnerButton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9HZW5lcmFsL0dlbmVyaWNTcGlubmVyQnV0dG9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/AccessDenied.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BY2Nlc3NEZW5pZWQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
