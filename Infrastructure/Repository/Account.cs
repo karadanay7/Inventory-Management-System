@@ -163,10 +163,10 @@ namespace Infrastructure.Repository
             {
                 var response = await CreateUserAsync(new CreateUserRequestDTO
                 {
-                    Name = "Administrator",
-                    Email = "admin@admin.com",
-                    Password = "Admin@123",
-                    Policy = Policy.AdminPolicy
+                    Name = "Manager",
+                    Email = "manager@manager.com",
+                    Password = "Manager@123",
+                    Policy = Policy.ManagerPolicy
                 });
 
                 if (response.Flag)

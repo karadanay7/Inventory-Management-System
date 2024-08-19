@@ -205,4 +205,3 @@
 /Users/aysegulkaradan/Projects/IMS/WebUI/obj/Debug/net8.0/WebUI.pdb
 /Users/aysegulkaradan/Projects/IMS/WebUI/obj/Debug/net8.0/WebUI.genruntimeconfig.cache
 /Users/aysegulkaradan/Projects/IMS/WebUI/obj/Debug/net8.0/ref/WebUI.dll
-/Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/TailBlazor.HeroIcons.dll
