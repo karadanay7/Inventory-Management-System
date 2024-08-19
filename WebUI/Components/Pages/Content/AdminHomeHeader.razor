@@ -1,0 +1,42 @@
+﻿@rendermode InteractiveServer
+@implements IDisposable
+
+<div>
+    <h3>Hi, Welcome Back</h3>
+    <div>
+        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true))">
+            <i></i>
+            <span>@adminState.ProcessingCount</span>
+            Processing
+        </button>
+        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivering, true))">
+            <i></i>
+            <span>@adminState.DeliveringCount</span>
+            Delivering
+        </button>
+          <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivered, true))">
+            <i></i>
+            <span>@adminState.DeliveredCount</span>
+           Delivered
+        </button>
+           <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Canceled, true))">
+            <i></i>
+            <span>@adminState.CancelledCount</span>
+           Cancelled
+        </button>
+
+    </div>
+</div>
+
+@code
+{
+    public int Count { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        adminState.StateChanged += StateHasChanged;
+        await adminState.GetActiveOrdersCount();
+
+    }
+    public void Dispose() => adminState.StateChanged -= StateHasChanged;
+   
+}

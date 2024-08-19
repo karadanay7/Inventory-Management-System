@@ -1,5 +1,6 @@
 ﻿@using Application.DTO.Response.Orders
 @using Application.Service.Orders
+@using MediatR
 @inject IServiceProvider serviceProvider
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -154,14 +155,14 @@
                     string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                     using var scope = serviceProvider.CreateScope();
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                        UserOrders = await mediator.Send(new GetOrdersByUserIdQuery(userId));
+                        UserOrders = await mediator.Send(new GetOrdersByIdQuery(userId));
                         GetClientSections();
                 }
                 else if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true)
                 {
                     using var scope = serviceProvider.CreateScope();
                     var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                        AdminOrders = await mediator.Send(new GetAllOrders());
+                        AdminOrders = await mediator.Send(new GetAllOrdersQuery());
                         GetAdminSections();
                 }
                
@@ -173,21 +174,21 @@
                 void GetAdminSections()
                 {
                     AdminTotalAmountOfOrderedProduct = AdminOrders.Sum(x => x.TotalAmount);
-                    AdminOnlyTodayOrderedProducts = AdminOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    AdminOnlyTodayOrderedProducts = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
                     AdminTodayOrdersPercentage = AdminOnlyTodayOrderedProducts / AdminTotalAmountOfOrderedProduct * 100;
                     AdminGrossProductsQuantitiesOrdered = AdminOrders.Sum(x => x.Quantity);
-                    AdminTodayProductsQuantitiesOrdered = AdminOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.Quantity);
-                    AdminTotalAmountOfProductOrderedLastMonth = AdminOrders.Where(x => x.CreatedAt.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    AdminTodayProductsQuantitiesOrdered = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.Quantity);
+                    AdminTotalAmountOfProductOrderedLastMonth = AdminOrders.Where(x => x.OrderedDate.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
                     AdminLastMonthProductOrderedPercentageOverAll = AdminTotalAmountOfProductOrderedLastMonth / AdminTotalAmountOfOrderedProduct * 100;
                 }
                 void GetClientSections()
                 {
                     ClientTotalAmountOfOrderedProduct = UserOrders.Sum(x => x.TotalAmount);
-                    ClientOnlyTodayOrderedProducts = UserOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    ClientOnlyTodayOrderedProducts = UserOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
                     ClientTodayOrdersPercentage = ClientOnlyTodayOrderedProducts / ClientTotalAmountOfOrderedProduct * 100;
                     ClientGrossProductsQuantitiesOrdered = UserOrders.Sum(x => x.Quantity);
-                    ClientTodayProductsQuantitiesOrdered = UserOrders.Where(x => x.CreatedAt.Date == DateTime.Now.Date).Sum(x => x.Quantity);
-                    ClientTotalAmountOfProductOrderedLastMonth = UserOrders.Where(x => x.CreatedAt.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    ClientTodayProductsQuantitiesOrdered = UserOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.Quantity);
+                    ClientTotalAmountOfProductOrderedLastMonth = UserOrders.Where(x => x.OrderedDate.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
                     ClientLastMonthProductOrderedPercentageOverAll = ClientTotalAmountOfProductOrderedLastMonth / ClientTotalAmountOfOrderedProduct * 100;
                 }
             }

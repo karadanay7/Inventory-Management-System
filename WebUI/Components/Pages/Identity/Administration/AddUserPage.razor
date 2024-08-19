@@ -1,6 +1,10 @@
 ﻿@page "/administration/account/create-user"
 @rendermode InteractiveServer
 @implements IDisposable
+@using Application.DTO.Request
+
+@using WebUI.Components.Layout
+ç
 <PageTitle>Add User</PageTitle>
 
 <ThreeSectionsTemplate>
@@ -19,6 +23,19 @@
                      <option value="@policy">@policy</option>
                  }
                  </InputSelect>
+                 <FloatingText Label="User Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></FloatingText>
+                 <FloatingText Label="Confirm Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></FloatingText>
+                 <a href="" @onclick="ChangePasswordType"><small>@passwordState.DisplayText</small></a>
+                 <div>
+                    @if (Loading)
+                    {
+                        <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..."/>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary">Create User</button>
+                    }
+                 </div>
 
             </EditForm>
         </div>
@@ -49,5 +66,70 @@
                 new string(Policy.UserPolicy),
                 new string(Policy.ManagerPolicy)
 
+            };
+            private HubConnection? hubConnection;
+            private async Task RegisterAsync()
+            {
+                Loading = true;
+                await Task.Delay(3000);
+                var response = await accountService.CreateUserAsync(UserModel);
+                await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+                {
+                    UserId = (await UserAuthState!).User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
+                    Title = "Create New User method called",
+                    Description = response.Message,
+                    OperationState = response.Flag,
+                    Date = DateTime.Now.Date
+
+                });
+                if (response.Flag)
+                {
+                    await ToastComponent!.ShowSuccessToast("Info",response.Message);
+                    UserModel = new ();
+                }
+                else
+                {
+                    await ToastComponent!.ShowErrorToast("Alert",response.Message);
+                }
+                Loading = false;
+
+            }
+            protected async override Task OnInitializedAsync()
+            {
+               if (!customAuthorizationService.CustomClaimChecker((await UserAuthState!).User, DefaultClaims.ManageUser))
+                   Navigation.NavigateTo("/Account/Access-Denied");
+               passwordState.Changed +=StateHasChanged;
+               homeGenericState.StateChanged += StateButtonClicked;
+
+               hubConnection = netcodeHubConnectionService.GetHubConnection();
+               hubConnection.On<string>("Notify", async (clientId) =>
+               {
+                await CallWhenNotified();
+               });
+               if (hubConnection is null) await hubConnection!.StartAsync();
+            }
+
+            async Task CallWhenNotified()
+            {
+                await InvokeAsync(async () =>
+                {
+                    StateHasChanged();
+                    await adminActiveOrderCountState.GetActiveOrdersCount();
+                });
+            }
+            void StateButtonClicked()
+            {
+               string adminOrderUrl = "app/administration/products/orders";
+               if(homeGenericState.IsAdmin)
+               {
+                   Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+               }
+            }
+            void ChangePasswordType () => passwordState.ChangePasswordType();
+
+            public void Dispose()
+            {
+                homeGenericState.StateChanged -= StateButtonClicked;
+                passwordState.Changed -= StateHasChanged;
             }
 }

@@ -13,7 +13,7 @@ public class BaseActivityTracker
     [Required]
     public string Description { get; set; }
     [Required]
-    public string OperationState { get; set; }
+    public bool OperationState { get; set; }
     [Required]
     public string UserId { get; set; }
     

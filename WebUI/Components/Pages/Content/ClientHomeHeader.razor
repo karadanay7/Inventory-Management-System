@@ -1,0 +1,48 @@
+﻿@rendermode InteractiveServer
+@implements IDisposable
+
+<div>
+    <h3>Hi, Welcome Back</h3>
+    <div>
+        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true))">
+            <i></i>
+            <span>@userState.ProcessingCount</span>
+            Processing
+        </button>
+        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivering, true))">
+            <i></i>
+            <span>@userState.DeliveringCount</span>
+            Delivering
+        </button>
+          <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivered, true))">
+            <i></i>
+            <span>@userState.DeliveredCount</span>
+           Delivered
+        </button>
+           <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Canceled, true))">
+            <i></i>
+            <span>@userState.CancelledCount</span>
+           Cancelled
+        </button>
+
+    </div>
+</div>
+
+@code
+{
+ [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+       try{
+        string userId =  ( await UserAuthState!).User!.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        await userState.GetActiveOrdersCount(userId);
+       }
+         catch(Exception ex)
+         {
+              Console.WriteLine(ex.Message);
+         }
+
+    }
+    public void Dispose() => userState.StateChanged -= StateHasChanged;
+   
+}

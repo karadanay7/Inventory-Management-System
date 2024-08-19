@@ -3,9 +3,19 @@
 @using WebUI.Components.Layout.Identity
 
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Application.DTO.Request.Identity
+@using WebUI.Hubs
+@using WebUI.Components.Pages.Content
+@using WebUI.States
+@using WebUI.States.Administration
+@using WebUI.States.User
 
 @layout AuthenticationLayout
 
+
+
 @inject IAccountService accountService
 @inject NavigationManager Navigation
-@using Microsoft.AspNetCore.Components.Authorization
+
+@inject UserActiveOrderCountState userState 

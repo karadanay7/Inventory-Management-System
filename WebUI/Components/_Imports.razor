@@ -27,6 +27,11 @@
 
 @using Application.Service.Orders.Queries
 @using WebUI.Components.Layout.Identity
+@using WebUI.Hubs
+@using WebUI.States
+@using WebUI.States.Administration
+@using WebUI.States.User
+@using Syncfusion.Blazor.Notifications
 
 
 @inject NavigationManager Navigation
@@ -37,3 +42,8 @@
 @inject IJSRuntime js 
 @inject ICustomAuthorizationService customAuthorizationService
 
+@inject ChangePasswordState passwordState 
+@inject NetcodeHubConnectionService netcodeHubConnectionService 
+@inject GenericHomeHeaderState homeGenericState
+@inject AdminActiveOrderCountState adminState 
+@inject UserActiveOrderCountState userState 
