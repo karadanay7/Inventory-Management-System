@@ -25,16 +25,20 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Footer.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvRm9vdGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Identity/AuthenticationLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvSWRlbnRpdHkvQXV0aGVudGljYXRpb25MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Identity/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvSWRlbnRpdHkvUmVkaXJlY3RUb0xvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Main/Footer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbi9Gb290ZXIucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Main/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbi9NYWluTGF5b3V0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/NavigationBar/NavItems.razor]
@@ -89,8 +93,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9BZGRVc2VyUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/Administration/_imports.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9faW1wb3J0cy5yYXpvcg==
+[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/Administration/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9JZGVudGl0eS9BZG1pbmlzdHJhdGlvbi9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/AuthenticationPage.razor]
@@ -112,11 +116,3 @@ build_metadata.AdditionalFiles.CssScope =
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-jm9zh02tux
-
-[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-7a3jjhmv9o

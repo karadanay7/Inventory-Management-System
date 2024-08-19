@@ -25,6 +25,7 @@
     <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.2.9" />
     <PackageReference Include="Syncfusion.Blazor.Navigations" Version="26.2.9" />
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="26.2.9" />
+   
   </ItemGroup>
 
   <ItemGroup>

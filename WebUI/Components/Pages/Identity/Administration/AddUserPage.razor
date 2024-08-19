@@ -1,10 +1,10 @@
-﻿@page "/administration/account/create-user"
+﻿
+
+@page "/administration/account/create-user"
+@using Application.DTO.Request
 @rendermode InteractiveServer
 @implements IDisposable
-@using Application.DTO.Request
 
-@using WebUI.Components.Layout
-ç
 <PageTitle>Add User</PageTitle>
 
 <ThreeSectionsTemplate>
@@ -114,7 +114,7 @@
                 await InvokeAsync(async () =>
                 {
                     StateHasChanged();
-                    await adminActiveOrderCountState.GetActiveOrdersCount();
+                    await adminState.GetActiveOrdersCount();
                 });
             }
             void StateButtonClicked()
