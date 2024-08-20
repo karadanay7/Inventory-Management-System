@@ -15,6 +15,7 @@ module.exports = {
   daisyui: {
       themes: [
           "pastel",
+          "fantasy",
           
       ],
   },
