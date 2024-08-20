@@ -96,7 +96,7 @@ namespace Infrastructure.Repository
 
             }
 
-            var result = CheckResult(await _userManager.AddClaimsAsync((await _userManager.FindByEmailAsync(model.Email)), userClaims));
+            var result = CheckResult(await _userManager.AddClaimsAsync(await _userManager.FindByEmailAsync(model.Email), userClaims));
             if (result.Flag) return new ServiceResponse(true, "User created successfully");
             else
                 return result;
@@ -191,12 +191,10 @@ namespace Infrastructure.Repository
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null) return new ServiceResponse(false, "User not found");
 
-            var oldClaims = await _userManager.GetClaimsAsync(user);
-            var removeResult = await _userManager.RemoveClaimsAsync(user, oldClaims);
-            if (!removeResult.Succeeded) return CheckResult(removeResult);
-
-            var newClaims = new Claim[]
-            {
+            var oldUserClaims = await _userManager.GetClaimsAsync(user);
+           
+            Claim[] newUserClaims = 
+            [
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, model.RoleName),
                 new Claim("Name", model.Name),
@@ -205,10 +203,17 @@ namespace Infrastructure.Repository
                 new Claim("Delete", model.Delete.ToString()),
                 new Claim("Read", model.Read.ToString()),
                 new Claim("ManageUser", model.ManageUser.ToString())
-            };
+            ];
 
-            var addResult = await _userManager.AddClaimsAsync(user, newClaims);
-            return CheckResult(addResult);
+          
+          var result  =  await _userManager.RemoveClaimsAsync(user, oldUserClaims);
+          var response = CheckResult(result);
+            if (!response.Flag) return new ServiceResponse(false, response.Message);
+           var addNewClaims = await _userManager.AddClaimsAsync(user, newUserClaims);
+           var outcome = CheckResult(addNewClaims);
+            if (!outcome.Flag) return new ServiceResponse(false, outcome.Message);
+            return new ServiceResponse(true, "User updated successfully");
+
         }
 
     public  async Task SaveActivityAsync(ActivityTrackerRequestDTO model)

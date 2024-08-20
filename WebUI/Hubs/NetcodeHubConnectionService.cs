@@ -15,6 +15,7 @@ public class NetcodeHubConnectionService
             .WithUrl(navigationManager.ToAbsoluteUri("/communicationhub"))
             .Build();
             _hubConnection.StartAsync();
+            Console.WriteLine("Hub connection started");
     }
     public HubConnection GetHubConnection() => _hubConnection;
    

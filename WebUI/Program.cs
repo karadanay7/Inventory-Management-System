@@ -42,6 +42,7 @@ builder.Services.AddSignalR();
 
 
 
+
 builder.Logging.AddConsole();
 
 

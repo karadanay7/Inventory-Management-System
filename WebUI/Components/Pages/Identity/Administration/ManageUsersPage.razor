@@ -41,7 +41,7 @@
         <div class="modal modal-open">
             <div class="modal-box">
                 <h3 class="font-bold text-lg mb-4 text-center">Manage Permissions for @ChangeUserClaim.Name</h3>
-                <EditForm Model="@ChangeUserClaim" OnValidSubmit="SaveChanges">
+                <EditForm Model="@ChangeUserClaim" OnSubmit="SaveChanges">
                     <DataAnnotationsValidator />
                     <div class="form-control mb-4">
                         <label class="label" for="Role">Create</label>
@@ -204,6 +204,7 @@ new string(Policy.RoleClaim.Manager),
         Loading = true;
         await Task.Delay(3000);
         var result = await accountService.UpdateUserAsync(ChangeUserClaim);
+      Console.WriteLine("result message: " + result);
         await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
             {
                 UserId = (await UserAuthState!).User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
@@ -212,9 +213,10 @@ new string(Policy.RoleClaim.Manager),
                 OperationState = result.Flag,
                 Date = DateTime.UtcNow.Date
             });
+            
         if (result.Flag)
         {
-            await ToastComponent!.ShowSuccessToast("Success", result.Message);
+            
             await GetUsersWithClaims();
 
         }
