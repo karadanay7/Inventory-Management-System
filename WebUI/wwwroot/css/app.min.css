@@ -2478,8 +2478,32 @@ details.collapse summary::-webkit-details-marker {
   top: 2.5rem;
 }
 
+.top-20 {
+  top: 5rem;
+}
+
+.top-52 {
+  top: 13rem;
+}
+
+.top-12 {
+  top: 3rem;
+}
+
+.top-32 {
+  top: 8rem;
+}
+
+.top-44 {
+  top: 11rem;
+}
+
 .z-50 {
   z-index: 50;
+}
+
+.z-10 {
+  z-index: 10;
 }
 
 .mx-auto {
@@ -2543,6 +2567,10 @@ details.collapse summary::-webkit-details-marker {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-8 {
   height: 2rem;
 }
@@ -2583,6 +2611,54 @@ details.collapse summary::-webkit-details-marker {
   width: 24rem;
 }
 
+.w-\[700px\] {
+  width: 700px;
+}
+
+.w-\[200px\] {
+  width: 200px;
+}
+
+.w-\[240px\] {
+  width: 240px;
+}
+
+.w-10 {
+  width: 2.5rem;
+}
+
+.w-\[20px\] {
+  width: 20px;
+}
+
+.w-20 {
+  width: 5rem;
+}
+
+.w-8 {
+  width: 2rem;
+}
+
+.w-14 {
+  width: 3.5rem;
+}
+
+.w-40 {
+  width: 10rem;
+}
+
+.w-64 {
+  width: 16rem;
+}
+
+.w-24 {
+  width: 6rem;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -2599,8 +2675,24 @@ details.collapse summary::-webkit-details-marker {
   list-style-type: none;
 }
 
+.grid-flow-row {
+  grid-auto-flow: row;
+}
+
+.grid-flow-col {
+  grid-auto-flow: column;
+}
+
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-rows-1 {
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
 }
 
 .flex-col {
@@ -2671,6 +2763,10 @@ details.collapse summary::-webkit-details-marker {
   gap: 0.75rem;
 }
 
+.gap-1 {
+  gap: 0.25rem;
+}
+
 .space-x-2 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
@@ -2679,6 +2775,10 @@ details.collapse summary::-webkit-details-marker {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-scroll {
+  overflow: scroll;
 }
 
 .rounded-box {
@@ -2898,6 +2998,188 @@ details.collapse summary::-webkit-details-marker {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+@media (min-width: 1024px) {
+  .lg\:collapse-title {
+    grid-column-start: 1;
+    grid-row-start: 1;
+  }
+
+  .collapse:has(.lg\:collapse-title:focus-visible) {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-offset: 2px;
+    outline-color: var(--fallback-bc,oklch(var(--bc)/1));
+  }
+
+  .lg\:collapse-arrow > .collapse-title:after {
+    position: absolute;
+    display: block;
+    height: 0.5rem;
+    width: 0.5rem;
+    --tw-translate-y: -100%;
+    --tw-rotate: 45deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-duration: 150ms;
+    transition-duration: 0.2s;
+    top: 1.9rem;
+    inset-inline-end: 1.4rem;
+    content: "";
+    transform-origin: 75% 75%;
+    box-shadow: 2px 2px;
+    pointer-events: none;
+  }
+
+  .collapse-arrow > .lg\:collapse-title:after {
+    position: absolute;
+    display: block;
+    height: 0.5rem;
+    width: 0.5rem;
+    --tw-translate-y: -100%;
+    --tw-rotate: 45deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-duration: 150ms;
+    transition-duration: 0.2s;
+    top: 1.9rem;
+    inset-inline-end: 1.4rem;
+    content: "";
+    transform-origin: 75% 75%;
+    box-shadow: 2px 2px;
+    pointer-events: none;
+  }
+
+  .collapse-plus > .lg\:collapse-title:after {
+    position: absolute;
+    display: block;
+    height: 0.5rem;
+    width: 0.5rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    transition-duration: 300ms;
+    top: 0.9rem;
+    inset-inline-end: 1.4rem;
+    content: "+";
+    pointer-events: none;
+  }
+
+  
+.collapse:not(.collapse-open):not(.collapse-close) > .lg\:collapse-title {
+    cursor: pointer;
+  }
+
+  .collapse:focus:not(.collapse-open):not(.collapse-close):not(.collapse[open]) > .lg\:collapse-title {
+    cursor: unset;
+  }
+
+  .lg\:collapse-title {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    padding-inline-end: 3rem;
+    min-height: 3.75rem;
+    transition: background-color 0.2s ease-out;
+  }
+
+  .lg\:collapse-arrow.collapse[open] > .collapse-title:after,.lg\:collapse-arrow
+.collapse-open > .collapse-title:after,.lg\:collapse-arrow:focus:not(.collapse-close) > .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-arrow > .lg\:collapse-title:after,
+.collapse-open.collapse-arrow > .lg\:collapse-title:after,
+.collapse-arrow:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .lg\:collapse-arrow.collapse[open] > .collapse-title:after,.lg\:collapse-arrow
+.collapse-open > .collapse-title:after,.lg\:collapse-arrow:focus:not(.collapse-close) > .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-arrow > .lg\:collapse-title:after,
+.collapse-open.collapse-arrow > .lg\:collapse-title:after,
+.collapse-arrow:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .lg\:collapse-arrow.collapse[open] > .collapse-title:after,.lg\:collapse-arrow
+.collapse-open > .collapse-title:after,.lg\:collapse-arrow:focus:not(.collapse-close) > .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-arrow > .lg\:collapse-title:after,
+.collapse-open.collapse-arrow > .lg\:collapse-title:after,
+.collapse-arrow:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .lg\:collapse-arrow.collapse[open] > .collapse-title:after,.lg\:collapse-arrow
+.collapse-open > .collapse-title:after,.lg\:collapse-arrow:focus:not(.collapse-close) > .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-arrow > .lg\:collapse-title:after,
+.collapse-open.collapse-arrow > .lg\:collapse-title:after,
+.collapse-arrow:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .lg\:collapse-arrow.collapse[open] > .collapse-title:after,.lg\:collapse-arrow
+.collapse-open > .collapse-title:after,.lg\:collapse-arrow:focus:not(.collapse-close) > .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .collapse-title:after,.lg\:collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-arrow > .lg\:collapse-title:after,
+.collapse-open.collapse-arrow > .lg\:collapse-title:after,
+.collapse-arrow:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-arrow:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    --tw-translate-y: -50%;
+    --tw-rotate: 225deg;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+  }
+
+  .collapse[open].collapse-plus > .lg\:collapse-title:after,
+.collapse-open.collapse-plus > .lg\:collapse-title:after,
+.collapse-plus:focus:not(.collapse-close) > .lg\:collapse-title:after,
+.collapse-plus:not(.collapse-close) > input[type="checkbox"]:checked ~ .lg\:collapse-title:after,
+.collapse-plus:not(.collapse-close) > input[type="radio"]:checked ~ .lg\:collapse-title:after {
+    content: "−";
+  }
+}
+
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -2936,8 +3218,24 @@ details.collapse summary::-webkit-details-marker {
 }
 
 @media (min-width: 1024px) {
+  .lg\:block {
+    display: block;
+  }
+
+  .lg\:hidden {
+    display: none;
+  }
+
+  .lg\:w-72 {
+    width: 18rem;
+  }
+
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:gap-8 {
+    gap: 2rem;
   }
 
   .lg\:p-16 {

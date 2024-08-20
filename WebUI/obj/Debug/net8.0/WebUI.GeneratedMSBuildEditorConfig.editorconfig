@@ -49,10 +49,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2aWdhdGlvbkJhci9Pbk1vYmlsZVNjcmVlbkxvZ28ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Sidebar/Brand.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvU2lkZWJhci9CcmFuZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Layout/Sidebar/Content.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvU2lkZWJhci9Db250ZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

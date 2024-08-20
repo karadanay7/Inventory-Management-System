@@ -3,11 +3,11 @@
 @using MediatR
 @inject IServiceProvider serviceProvider
 
-<div class="grid grid-cols-1  ">
+<div class="grid grid-rows-1  ">
 
     <!-- Admin Section -->
     <AuthorizeView Policy="AdministrationPolicy">
-         <div class="flex items-center justify-end p-2 w-full">
+         <div class="flex items-center justify-start p-2 ">
             <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Data" : "Open Data"))</button>
         </div>
         
@@ -15,9 +15,9 @@
       
        @if(isOpen)
        {
-           <div>
+           <div class="absolute top-52">
            
-            <div class="grid grid-cols-1   gap-4">
+            <div class="  flex flex-wrap    gap-4">
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <p class="text-lg font-semibold">Total Amount Ordered</p>
