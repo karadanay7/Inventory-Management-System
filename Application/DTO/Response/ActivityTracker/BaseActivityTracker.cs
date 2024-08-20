@@ -7,7 +7,7 @@ public class BaseActivityTracker
 { 
     [Required]
     [DataType(DataType.DateTime)]
-    public DateTime Date { get; set; } = DateTime.Now.Date;
+    public DateTime Date { get; set; } = DateTime.UtcNow.Date;
     [Required]
     public string Title { get; set; }
     [Required]

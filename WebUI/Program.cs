@@ -34,7 +34,7 @@ builder.Services.AddSyncfusionBlazor();
 builder.Services.AddVirtualizationService();
 
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ4NjMzQDMxMzgyZTM0MmUzMGJk");
+// Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ4NjMzQDMxMzgyZTM0MmUzMGJk");
 builder.Services.AddMudServices();
 builder.Services.AddSignalR();
 

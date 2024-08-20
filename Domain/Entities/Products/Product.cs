@@ -17,6 +17,6 @@ public class Product : ProductBase
     public string SerialNumber { get; set; }
     public string Description { get; set; }
     public string Base64Image { get; set; }
-    public DateTime DateAdded { get; set; } = DateTime.Now;
+    public DateTime DateAdded { get; set; } = DateTime.UtcNow;
 }
 

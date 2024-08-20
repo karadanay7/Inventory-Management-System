@@ -1,155 +1,112 @@
-﻿@page "/administration/accounts/users/manage"
+﻿@page "/administration/account/users/manage"
 @using Application.DTO.Request
 @rendermode InteractiveServer
 <PageTitle>Manage User</PageTitle>
 
-
-<div>
-    <div>
+<div class="container mx-auto p-4">
+    <div class="mb-4">
         <AdminHomeHeader />
-        <NetcodeHubBreadCrumb BreadCrumbs="Breadcrumbs" ReloadPageOnClick=true />
-        <div>
-            @foreach (var user in Users)
-            {
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h4>@user.Name</h4>
-                                <p>Role: @user.RoleName</p>
-                                <p>Email: @user.Email</p>
-                                <p>Create:@user.Create </p>
-                                <p>Update:@user.Update </p>
-                                <p>Delete:@user.Delete </p>
-                                <p>Read:@user.Read </p>
-                                <p>User Manahement @user.ManageUser</p>
+    </div>
 
-                            </div>
-                            <div class="col-md-6">
-                                <button class="btn btn-primary" @onclick="()=>ManageUserClicked(user)">Manage</button>
-                            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @foreach (var user in Users)
+        {
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title">@user.Name</h2>
+                    <p>Role: @user.RoleName</p>
+                    <p>Email: @user.Email</p>
+                    <div class="flex flex-col justify-between items-start mt-4">
+                        <div>
+                            <p>Create: @user.Create</p>
+                            <p>Update: @user.Update</p>
+                            <p>Delete: @user.Delete</p>
+                            <p>Read: @user.Read</p>
+                            <p>User Management: @user.ManageUser</p>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p>@user.Email</p>
-                            </div>
-                            <div class="col-md-6">
 
+                        <div class=" flex justify-end w-full">
+                            <div> <button class="btn btn-primary  " @onclick="() => ManageUserClicked(user)">Manage</button>
                             </div>
+
                         </div>
                     </div>
                 </div>
-            }
-
-        </div>
-        <NetcodeHubModal @bind-Open="isOpen">
-            <div>
-                Manage Permissions
             </div>
-            <div>
-                <EditForm Model="ChangeUserClaim" OnValidSubmit="SaveChanges">
+        }
+    </div>
+
+    @if (isOpen)
+    {
+        <div class="modal modal-open">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg mb-4 text-center">Manage Permissions for @ChangeUserClaim.Name</h3>
+                <EditForm Model="@ChangeUserClaim" OnValidSubmit="SaveChanges">
                     <DataAnnotationsValidator />
-                    <div class="form-group">
-                        <label for="Role">Create</label>
-                        <InputSelect class="form-control" @bind-Value="ChangeUserClaim.Create">
-                            @if (ChangeUserClaim.Create)
-                            {
-                                <option selected value="true">True</option>
-                                <option value="false">False</option>
-                            }
-                            else
-                            {
-                                <option selected value="false">False</option>
-                                <option value="true">True</option>
-                            }
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Create</label>
+                        <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.Create">
+                            <option selected value="true">True</option>
+                            <option value="false">False</option>
                         </InputSelect>
                     </div>
-                    <div>
-                        <label for="Role">Update</label>
-                        <InputSelect class="form-control" @bind-Value="ChangeUserClaim.Update">
-                            @if (ChangeUserClaim.Update)
-                            {
-                                <option selected value="true">True</option>
-                                <option value="false">False</option>
-                            }
-                            else
-                            {
-                                <option selected value="false">False</option>
-                                <option value="true">True</option>
-                            }
+
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Update</label>
+                        <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.Update">
+                            <option selected value="true">True</option>
+                            <option value="false">False</option>
                         </InputSelect>
                     </div>
-                    <div>
-                        <label for="Role">Delete</label>
-                        <InputSelect class="form-control" @bind-Value="ChangeUserClaim.Delete">
-                            @if (ChangeUserClaim.Delete)
-                            {
-                                <option selected value="true">True</option>
-                                <option value="false">False</option>
-                            }
-                            else
-                            {
-                                <option selected value="false">False</option>
-                                <option value="true">True</option>
-                            }
+
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Delete</label>
+                        <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.Delete">
+                            <option selected value="true">True</option>
+                            <option value="false">False</option>
                         </InputSelect>
                     </div>
-                    <div>
-                        <label for="Role">Read</label>
-                        <InputSelect class="form-control" @bind-Value="ChangeUserClaim.Read">
-                            @if (ChangeUserClaim.Read)
-                            {
-                                <option selected value="true">True</option>
-                                <option value="false">False</option>
-                            }
-                            else
-                            {
-                                <option selected value="false">False</option>
-                                <option value="true">True</option>
-                            }
+
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Read</label>
+                        <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.Read">
+                            <option selected value="true">True</option>
+                            <option value="false">False</option>
                         </InputSelect>
                     </div>
-                    <div>
-                        <label for="Role">Manage User</label>
-                        <InputSelect class="form-control" @bind-Value="ChangeUserClaim.ManageUser">
-                            @if (ChangeUserClaim.ManageUser)
-                            {
-                                <option selected value="true">True</option>
-                                <option value="false">False</option>
-                            }
-                            else
-                            {
-                                <option selected value="false">False</option>
-                                <option value="true">True</option>
-                            }
+
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Manage User</label>
+                        <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.ManageUser">
+                            <option selected value="true">True</option>
+                            <option value="false">False</option>
                         </InputSelect>
                     </div>
-                    <div>
-                        <label for="Role"> Role</label>
+
+                    <div class="form-control mb-4">
+                        <label class="label" for="Role">Role</label>
                         @if (Roles != null && !string.IsNullOrEmpty(ChangeUserClaim.RoleName))
                         {
-                            <InputSelect class="form-control" @bind-Value="ChangeUserClaim.RoleName">
+                            <InputSelect class="select select-bordered" @bind-Value="ChangeUserClaim.RoleName">
                                 @{
                                     string roleName = "";
                                 }
-                                @if (ChangeUserClaim.RoleName == Policy.RoleClaim.Admin)
+                                @if (ChangeUserClaim.RoleName.Equals(Policy.RoleClaim.Admin))
                                 {
                                     roleName = Policy.RoleClaim.Admin;
                                     <option selected value="Admin">@Policy.RoleClaim.Admin</option>
+
                                 }
-                                else if (ChangeUserClaim.RoleName == Policy.RoleClaim.User)
+                                else if (ChangeUserClaim.RoleName.Equals(Policy.RoleClaim.Manager))
                                 {
-                                    roleName = Policy.RoleClaim.Manager;
                                     <option selected value="Manager">@Policy.RoleClaim.Manager</option>
+
                                 }
                                 else
                                 {
-                                    roleName = Policy.RoleClaim.User;
-                                    <option selected value="User">@Policy.RoleClaim.User</option>
+                                    <option value="User">@Policy.RoleClaim.User</option>
                                 }
-                                @foreach (var role in Roles!)
+                                @foreach (var role in Roles)
                                 {
                                     if (!role.Equals(roleName))
                                     {
@@ -157,26 +114,33 @@
                                     }
                                 }
                             </InputSelect>
+
                         }
 
+
+
+
+
+                       
+
                     </div>
-                    <div>
+
+                    <div class="flex justify-between">
+                        <button class="btn btn-error ml-2" @onclick="CloseModelDialog">Cancel</button>
                         @if (Loading)
                         {
-                            <WebUI.Components.Pages.General.GenericSpinnerButton Text="Saving.." />
+                            <button class="btn btn-warning loading" disabled>Saving...</button>
                         }
                         else
                         {
-                            <button class="btn btn-primary" type="submit">Save</button>
+                            <button class="btn btn-accent px-6" type="submit">Save</button>
                         }
-                    </div>
 
+                    </div>
                 </EditForm>
             </div>
-
-        </NetcodeHubModal>
-
-    </div>
+        </div>
+    }
 </div>
 
 @code
@@ -246,7 +210,7 @@ new string(Policy.RoleClaim.Manager),
                 Title = "Get All Users with Claims method called",
                 Description = result.Message,
                 OperationState = result.Flag,
-                Date = DateTime.Now.Date
+                Date = DateTime.UtcNow.Date
             });
         if (result.Flag)
         {
@@ -272,14 +236,14 @@ new string(Policy.RoleClaim.Manager),
             await ToastComponent!.ShowErrorToast("Error", $"Failed to load users: {ex.Message}");
         }
     }
-       void StateButtonClicked()
-       {
-         string adminOrderUrl = "app/administration/products/orders";
-               if(homeGenericState.IsAdmin)
-               {
-                   Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
-               }
-       }
+    void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
 
 
 }

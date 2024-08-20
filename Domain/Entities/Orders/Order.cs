@@ -7,7 +7,7 @@ public class Order
 {
     [Key]
     public Guid Id { get; set; } = Guid.NewGuid();
-    public DateTime DateOrdered { get; set; } = DateTime.Now;
+    public DateTime DateOrdered { get; set; } = DateTime.UtcNow;
     public DateTime DeliveringDate { get; set; }
     public Guid ProductId { get; set; }
     public string ClientId { get; set; }

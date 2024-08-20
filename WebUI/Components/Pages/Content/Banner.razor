@@ -174,21 +174,21 @@
                 void GetAdminSections()
                 {
                     AdminTotalAmountOfOrderedProduct = AdminOrders.Sum(x => x.TotalAmount);
-                    AdminOnlyTodayOrderedProducts = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    AdminOnlyTodayOrderedProducts = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.UtcNow.Date).Sum(x => x.TotalAmount);
                     AdminTodayOrdersPercentage = AdminOnlyTodayOrderedProducts / AdminTotalAmountOfOrderedProduct * 100;
                     AdminGrossProductsQuantitiesOrdered = AdminOrders.Sum(x => x.Quantity);
-                    AdminTodayProductsQuantitiesOrdered = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.Quantity);
-                    AdminTotalAmountOfProductOrderedLastMonth = AdminOrders.Where(x => x.OrderedDate.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    AdminTodayProductsQuantitiesOrdered = AdminOrders.Where(x => x.OrderedDate.Date == DateTime.UtcNow.Date).Sum(x => x.Quantity);
+                    AdminTotalAmountOfProductOrderedLastMonth = AdminOrders.Where(x => x.OrderedDate.Date >= DateTime.UtcNow.AddMonths(-1).Date).Sum(x => x.TotalAmount);
                     AdminLastMonthProductOrderedPercentageOverAll = AdminTotalAmountOfProductOrderedLastMonth / AdminTotalAmountOfOrderedProduct * 100;
                 }
                 void GetClientSections()
                 {
                     ClientTotalAmountOfOrderedProduct = UserOrders.Sum(x => x.TotalAmount);
-                    ClientOnlyTodayOrderedProducts = UserOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.TotalAmount);
+                    ClientOnlyTodayOrderedProducts = UserOrders.Where(x => x.OrderedDate.Date == DateTime.UtcNow.Date).Sum(x => x.TotalAmount);
                     ClientTodayOrdersPercentage = ClientOnlyTodayOrderedProducts / ClientTotalAmountOfOrderedProduct * 100;
                     ClientGrossProductsQuantitiesOrdered = UserOrders.Sum(x => x.Quantity);
-                    ClientTodayProductsQuantitiesOrdered = UserOrders.Where(x => x.OrderedDate.Date == DateTime.Now.Date).Sum(x => x.Quantity);
-                    ClientTotalAmountOfProductOrderedLastMonth = UserOrders.Where(x => x.OrderedDate.Date >= DateTime.Now.AddMonths(-1).Date).Sum(x => x.TotalAmount);
+                    ClientTodayProductsQuantitiesOrdered = UserOrders.Where(x => x.OrderedDate.Date == DateTime.UtcNow.Date).Sum(x => x.Quantity);
+                    ClientTotalAmountOfProductOrderedLastMonth = UserOrders.Where(x => x.OrderedDate.Date >= DateTime.UtcNow.AddMonths(-1).Date).Sum(x => x.TotalAmount);
                     ClientLastMonthProductOrderedPercentageOverAll = ClientTotalAmountOfProductOrderedLastMonth / ClientTotalAmountOfOrderedProduct * 100;
                 }
             }

@@ -79,7 +79,7 @@
                     Title = "Create New User method called",
                     Description = response.Message,
                     OperationState = response.Flag,
-                    Date = DateTime.Now.Date
+                    Date = DateTime.UtcNow.Date
 
                 });
                 if (response.Flag)

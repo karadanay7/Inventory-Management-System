@@ -37,6 +37,7 @@
     {
         adminState.StateChanged += StateHasChanged;
         await adminState.GetActiveOrdersCount();
+        
 
     }
     public void Dispose() => adminState.StateChanged -= StateHasChanged;
