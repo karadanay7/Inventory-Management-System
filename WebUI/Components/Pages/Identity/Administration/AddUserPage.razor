@@ -6,9 +6,9 @@
 <PageTitle>Add User</PageTitle>
 <div class="w-full flex flex-col items-start justify-start  min-h-screen bg-base-200 overflow-scroll ">
     <AdminHomeHeader />
-       <div class="justify-start">
-            <Banner />
-        </div>
+    <div class="justify-start">
+        <Banner />
+    </div>
     <div class=" flex  w-full ">
 
         <div class="flex-grow">
@@ -16,9 +16,9 @@
             <div class="w-full flex flex-col items-center justify-center ">
                 <!-- Modal -->
 
-                <div class="flex items-center justify-center p-4  rounded-md shadow-lg">
+                <div class="flex items-center justify-center p-4  bg-base-200 rounded-md shadow-2xl">
                     <div class="">
-                        <h2 class="font-bold text-lg mb-4 text-center">Add New User</h2>
+                        <h2 class="font-bold text-lg mb-4 text-center text-primary">Add New User</h2>
                         <EditForm Model="@UserModel" OnSubmit="RegisterAsync" class="w-96">
                             <DataAnnotationsValidator />
                             <div class="form-control mb-4">
@@ -73,11 +73,11 @@
             </div>
 
         </div>
-     
+
 
 
     </div>
-    <div class=" fixed bottom-0">
+    <div class=" fixed bottom-0 justify-end">
         <Footer />
     </div>
 
