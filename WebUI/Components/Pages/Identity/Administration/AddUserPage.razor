@@ -1,135 +1,150 @@
-﻿
-
-@page "/administration/account/create-user"
+﻿@page "/administration/account/create-user"
 @using Application.DTO.Request
 @rendermode InteractiveServer
 @implements IDisposable
 
 <PageTitle>Add User</PageTitle>
 
-<ThreeSectionsTemplate>
-    <Col9Template>
-    <AdminHomeHeader/>
+<div>
+    <div>
+        <AdminHomeHeader />
 
         <div>
-            <EditForm Model="@UserModel" OnInvalidSubmit="RegisterAsync">
+            <EditForm  Model="@UserModel" FormName="register">
                 <DataAnnotationsValidator />
+
                 <InputText @bind-Value="UserModel.Name" Label="Full Name"></InputText>
-                 <InputText  @bind-Value="UserModel.Email" Label="Email"></InputText>
-                 <InputSelect @bind-Value="UserModel.Policy">
-                 <option value="">Select Policy</option>
-                 @foreach (var policy in Policies)
-                 {
-                     <option value="@policy">@policy</option>
-                 }
-                 </InputSelect>
-                 <InputText Label="User Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></InputText>
-                 <InputText Label="Confirm Password" Type="@passwordState.PasswordType" class="form-control" @bind-Value="UserModel.Password"></InputText>
-                 <a href="" @onclick="ChangePasswordType"><small>@passwordState.DisplayText</small></a>
-                 <div>
+
+                <InputText @bind-Value="UserModel.Email" Label="Email"></InputText>
+                <InputSelect @bind-Value="UserModel.Policy">
+                    <option value="">Select Policy</option>
+                    @foreach (var policy in Policies)
+                    {
+                        <option value="@policy">@policy</option>
+                    }
+                </InputSelect>
+                <InputText Label="User Password" Type="@passwordState.PasswordType" class="form-control"
+                    @bind-Value="UserModel.Password"></InputText>
+                <InputText Label="Confirm Password" Type="@passwordState.PasswordType" class="form-control"
+                    @bind-Value="UserModel.Password"></InputText>
+                <a href="" @onclick="ChangePasswordType"><small>@passwordState.DisplayText</small></a>
+                <div>
                     @if (Loading)
                     {
-                        <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..."/>
+                        <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..." />
                     }
                     else
                     {
-                        <button type="submit" class="btn btn-primary">Create User</button>
+                        <button type="submit" class="btn btn-primary " @onclick="OpenModal">Create User</button>
                     }
-                 </div>
+                </div>
 
             </EditForm>
         </div>
 
-    </Col9Template>
-    <Col3Template>
-    <Banner/>
-    </Col3Template>
-    <FooterTemplate><Footer/></FooterTemplate>
-</ThreeSectionsTemplate>
-<NetcodeHubToast @ref="ToastComponent" Duration="4000"/>
+    </div>
+    <div>
+        <Banner />
+    </div>
+    <div>
+        <Footer />
+    </div>
+</div>
+
 
 @code
 {
     private Dictionary<string, string> BreadCrumbs = new Dictionary<string, string>
-    {
-        { "Home", "/app/home" },
-     
-        { "Add New User", null! }
-    };
+{
+{ "Home", "/app/home" },
+
+{ "Add New User", null! }
+};
     [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
-        private CreateUserRequestDTO UserModel { get; set; } = new ();
-        NetcodeHubToast? ToastComponent;
-        private bool Loading = false;
-        private List<string> Policies = new List<string> 
-            {
-                new string(Policy.AdminPolicy),
-                new string(Policy.UserPolicy),
-                new string(Policy.ManagerPolicy)
+    private CreateUserRequestDTO UserModel { get; set; } = new();
+    NetcodeHubToast? ToastComponent;
+    private bool Loading = false;
+    private bool isModalOpen = false;
+    private void OpenModal()
+    {
+        isModalOpen = true;
+    }
 
-            };
-            private HubConnection? hubConnection;
-            private async Task RegisterAsync()
-            {
-                Loading = true;
-                await Task.Delay(3000);
-                var response = await accountService.CreateUserAsync(UserModel);
-                await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
-                {
-                    UserId = (await UserAuthState!).User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
-                    Title = "Create New User method called",
-                    Description = response.Message,
-                    OperationState = response.Flag,
-                    Date = DateTime.UtcNow.Date
+    private void CloseModal()
+    {
+        isModalOpen = false;
+    }
 
-                });
-                if (response.Flag)
-                {
-                    await ToastComponent!.ShowSuccessToast("Info",response.Message);
-                    UserModel = new ();
-                }
-                else
-                {
-                    await ToastComponent!.ShowErrorToast("Alert",response.Message);
-                }
-                Loading = false;
+    private List<string> Policies = new List<string>
+{
+new string(Policy.AdminPolicy),
+new string(Policy.UserPolicy),
+new string(Policy.ManagerPolicy)
 
-            }
-            protected async override Task OnInitializedAsync()
+};
+    private HubConnection? hubConnection;
+    private async Task RegisterAsync()
+    {
+        Loading = true;
+        await Task.Delay(3000);
+        var response = await accountService.CreateUserAsync(UserModel);
+        await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
             {
-               if (!customAuthorizationService.CustomClaimChecker((await UserAuthState!).User, DefaultClaims.ManageUser))
-                   Navigation.NavigateTo("/Account/Access-Denied");
-               passwordState.Changed +=StateHasChanged;
-               homeGenericState.StateChanged += StateButtonClicked;
+                UserId = (await UserAuthState!).User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
+                Title = "Create New User method called",
+                Description = response.Message,
+                OperationState = response.Flag,
+                Date = DateTime.UtcNow.Date
 
-               hubConnection = netcodeHubConnectionService.GetHubConnection();
-               hubConnection.On<string>("Notify", async (clientId) =>
-               {
-                await CallWhenNotified();
-               });
-               if (hubConnection is null) await hubConnection!.StartAsync();
-            }
+            });
+        if (response.Flag)
+        {
+            @* await ToastComponent!.ShowSuccessToast("Info", response.Message); *@
+            UserModel = new();
+        }
+        else
+        {
+            @* await ToastComponent!.ShowErrorToast("Alert", response.Message); *@
+        }
+        Loading = false;
 
-            async Task CallWhenNotified()
-            {
-                await InvokeAsync(async () =>
-                {
-                    StateHasChanged();
-                    await adminState.GetActiveOrdersCount();
-                });
-            }
-            void StateButtonClicked()
-            {
-               string adminOrderUrl = "app/administration/products/orders";
-               if(homeGenericState.IsAdmin)
-               {
-                   Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
-               }
-            }
-            void ChangePasswordType () => passwordState.ChangePasswordType();
+    }
+    protected async override Task OnInitializedAsync()
+    {
+        if (!customAuthorizationService.CustomClaimChecker((await UserAuthState!).User, DefaultClaims.ManageUser))
+            Navigation.NavigateTo("/Account/Access-Denied");
+        passwordState.Changed += StateHasChanged;
+        homeGenericState.StateChanged += StateButtonClicked;
 
-            public void Dispose()
-            {
-                homeGenericState.StateChanged -= StateButtonClicked;
-                passwordState.Changed -= StateHasChanged;
-            }
+        hubConnection = netcodeHubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+        if (hubConnection is null) await hubConnection!.StartAsync();
+    }
+
+    async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await adminState.GetActiveOrdersCount();
+        });
+    }
+    void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
+    void ChangePasswordType() => passwordState.ChangePasswordType();
+
+    public void Dispose()
+    {
+        homeGenericState.StateChanged -= StateButtonClicked;
+        passwordState.Changed -= StateHasChanged;
+    }
 }
