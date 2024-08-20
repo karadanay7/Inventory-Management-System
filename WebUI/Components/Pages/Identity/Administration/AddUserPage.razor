@@ -4,68 +4,89 @@
 @implements IDisposable
 
 <PageTitle>Add User</PageTitle>
-<div>
+<div class="w-full flex flex-col items-center justify-start h-full min-h-screen bg-base-200">
     <AdminHomeHeader />
+    <div class=" flex   w-full ">
 
-    <div class="p-4">
-        <button class="btn btn-primary" @onclick="OpenModal">Create User</button>
+        <div class="flex-grow">
 
-        <!-- Modal -->
-        @if (isModalOpen)
-        {
-            <div class="modal modal-open">
-                <div class="modal-box">
-                    <h2 class="font-bold text-lg mb-4 text-center">Add New User</h2>
-                    <EditForm Model="@UserModel" OnSubmit="RegisterAsync">
-                        <DataAnnotationsValidator />
-                        <div class="form-control mb-4">
-                            <label for="name" class="label">Full Name</label>
-                            <InputText id="name" @bind-Value="UserModel.Name" class="input" />
-                        </div>
-                        <div class="form-control mb-4">
-                            <label for="email" class="label">Email</label>
-                            <InputText id="email" @bind-Value="UserModel.Email" class="input" />
-                        </div>
-                        <div class="form-control mb-4">
-                            <label for="policy" class="label">Policy</label>
-                            <InputSelect id="policy" @bind-Value="UserModel.Policy" class="select select-bordered">
-                                <option value="">Select Policy</option>
-                                @foreach (var policy in Policies)
-                                {
-                                    <option value="@policy">@policy</option>
-                                }
-                            </InputSelect>
-                        </div>
-                        <div class="form-control mb-4">
-                            <label for="password" class="label">User Password</label>
-                            <InputText id="password" @bind-Value="UserModel.Password" Type="@passwordState.PasswordType" class="input" />
-                        </div>
-                        <div class="form-control mb-4">
-                            <label for="confirmPassword" class="label">Confirm Password</label>
-                            <InputText id="confirmPassword" @bind-Value="UserModel.ConfirmPassword" Type="@passwordState.PasswordType" class="input" />
-                            <a href="" @onclick="ChangePasswordType" class="text-sm text-blue-500 mb-4 block"><small>@passwordState.DisplayText</small></a>
-                        </div>
-                        
-                        <div class="flex justify-end mt-4">
-                            <button type="button" class="btn btn-secondary mr-2" @onclick="CloseModal">Cancel</button>
-                            <button type="submit" class="btn btn-primary" disabled="@Loading">Create User</button>
-                        </div>
-                    </EditForm>
+
+
+
+            <div class="w-full flex flex-col items-start justify-center">
+
+
+                <!-- Modal -->
+
+                <div class="flex items-center justify-cente p-4">
+                    <div class="">
+                        <h2 class="font-bold text-lg mb-4 text-center">Add New User</h2>
+                        <EditForm Model="@UserModel" OnSubmit="RegisterAsync" class="w-96">
+                            <DataAnnotationsValidator />
+                            <div class="form-control mb-4">
+                                <label for="name" class="label">Full Name</label>
+                                <InputText id="name" @bind-Value="UserModel.Name" class="input" />
+                            </div>
+                            <div class="form-control mb-4">
+                                <label for="email" class="label">Email</label>
+                                <InputText id="email" @bind-Value="UserModel.Email" class="input" />
+                            </div>
+                            <div class="form-control mb-4">
+                                <label for="policy" class="label">Policy</label>
+                                <InputSelect id="policy" @bind-Value="UserModel.Policy" class="select select-bordered">
+                                    <option value="">Select Policy</option>
+                                    @foreach (var policy in Policies)
+                                    {
+                                        <option value="@policy">@policy</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <div class="form-control mb-4">
+                                <label for="password" class="label">User Password</label>
+                                <InputText id="password" @bind-Value="UserModel.Password"
+                                    Type="@passwordState.PasswordType" class="input" />
+                            </div>
+                            <div class="form-control mb-4 relative">
+                                <label for="confirmPassword" class="label">Confirm Password</label>
+                                <InputText id="confirmPassword" @bind-Value="UserModel.ConfirmPassword"
+                                    Type="@passwordState.PasswordType" class="input pr-10" />
+                                <button type="button" @onclick="ChangePasswordType"
+                                    class="absolute inset-y-0 right-2 top-10 text-sm text-blue-500 focus:outline-none">
+                                    @passwordState.DisplayText
+                                </button>
+                            </div>
+                            <div class="flex justify-end mt-4">
+
+                                <button type="submit" class="btn btn-primary" disabled="@Loading">Create User</button>
+                            </div>
+                        </EditForm>
+                    </div>
                 </div>
-            </div>
-        }
 
-        <div>
-            @if (Loading)
-            {
-                <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..." />
-            }
+
+                <div>
+                    @if (Loading)
+                    {
+                        <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..." />
+                    }
+                </div>
+
+
+            </div>
+
         </div>
+        <div>
+            <Banner />
+        </div>
+
+
+    </div>
+    <div class=" fixed bottom-0">
+        <Footer />
     </div>
 
-    <Banner />
-    <Footer />
 </div>
+
 
 @code
 {

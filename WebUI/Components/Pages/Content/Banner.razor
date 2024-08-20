@@ -3,13 +3,21 @@
 @using MediatR
 @inject IServiceProvider serviceProvider
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="grid grid-cols-1  ">
 
     <!-- Admin Section -->
     <AuthorizeView Policy="AdministrationPolicy">
-        <div>
-            <h3 class="text-2xl font-semibold mb-4">Admin Overview</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+         <div class="flex items-center justify-end p-2 w-full">
+            <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Data" : "Open Data"))</button>
+        </div>
+        
+
+      
+       @if(isOpen)
+       {
+           <div>
+           
+            <div class="grid grid-cols-1   gap-4">
                 <div class="card bg-base-100 shadow-xl">
                     <div class="card-body">
                         <p class="text-lg font-semibold">Total Amount Ordered</p>
@@ -60,6 +68,11 @@
                 </div>
             </div>
         </div>
+
+       }
+     else{
+        <div></div>
+     }
     </AuthorizeView>
 
     <!-- User Section -->
@@ -125,6 +138,7 @@
         private IEnumerable<GetOrderResponseDTO> UserOrders = [];
         private IEnumerable<GetOrderResponseDTO> AdminOrders = [];
             ClaimsPrincipal? User;
+            private bool isOpen = false;
             private decimal ClientTotalAmountOfOrderedProduct ;
             private decimal ClientOnlyTodayOrderedProducts;
             private decimal ClientTodayOrdersPercentage;
@@ -141,6 +155,10 @@
             private decimal AdminTotalAmountOfProductOrderedLastMonth;
             private decimal AdminLastMonthProductOrderedPercentageOverAll;
 
+            private void ToggleModel()
+    {
+        isOpen = !isOpen;
+    }
 
             protected override async Task OnInitializedAsync()
             {
