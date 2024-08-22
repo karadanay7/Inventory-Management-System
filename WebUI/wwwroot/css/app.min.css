@@ -2724,6 +2724,10 @@ html:has(.drawer-toggle:checked) {
   top: 11rem;
 }
 
+.left-0 {
+  left: 0px;
+}
+
 .z-50 {
   z-index: 50;
 }
@@ -2877,8 +2881,36 @@ html:has(.drawer-toggle:checked) {
   width: 20rem;
 }
 
+.w-40 {
+  width: 10rem;
+}
+
+.min-w-96 {
+  min-width: 24rem;
+}
+
+.min-w-72 {
+  min-width: 18rem;
+}
+
+.min-w-64 {
+  min-width: 16rem;
+}
+
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-48 {
+  max-width: 12rem;
+}
+
+.max-w-72 {
+  max-width: 18rem;
+}
+
+.max-w-96 {
+  max-width: 24rem;
 }
 
 .flex-1 {
@@ -3358,6 +3390,10 @@ html:has(.drawer-toggle:checked) {
 
   .lg\:w-72 {
     width: 18rem;
+  }
+
+  .lg\:w-1\/2 {
+    width: 50%;
   }
 
   .lg\:translate-x-0 {

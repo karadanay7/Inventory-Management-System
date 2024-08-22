@@ -4,32 +4,32 @@
 @implements IDisposable
 
 <PageTitle>Add User</PageTitle>
-<div class="w-full flex flex-col items-start justify-start  min-h-screen bg-base-200 overflow-scroll ">
+<div class="w-full flex flex-col items-start justify-center  bg-base-200  ">
     <AdminHomeHeader />
     <div class="justify-start">
         <Banner />
     </div>
-    <div class=" flex  w-full ">
+    <div class=" flex  w-full  items-center justify-center">
 
-        <div class="flex-grow">
+        
 
-            <div class="w-full flex flex-col items-center justify-center ">
+        
                 <!-- Modal -->
 
-                <div class="flex items-center justify-center p-4  bg-base-200 rounded-md shadow-2xl">
-                    <div class="">
+                <div class="flex  flex-col items-center justify-center p-4  bg-base-200 rounded-md shadow-2xl min-w-64 lg:w-1/2  ">
+                    
                         <h2 class="font-bold text-lg mb-4 text-center text-primary">Add New User</h2>
-                        <EditForm Model="@UserModel" OnSubmit="RegisterAsync" class="w-96">
+                        <EditForm Model="@UserModel" OnSubmit="RegisterAsync" class="w-full  flex flex-col items-center justify-center ">
                             <DataAnnotationsValidator />
-                            <div class="form-control mb-4">
+                            <div class="form-control w-60 mb-4 ">
                                 <label for="name" class="label">Full Name</label>
                                 <InputText id="name" @bind-Value="UserModel.Name" class="input" />
                             </div>
-                            <div class="form-control mb-4">
+                            <div class="form-control w-60 mb-4">
                                 <label for="email" class="label">Email</label>
                                 <InputText id="email" @bind-Value="UserModel.Email" class="input" />
                             </div>
-                            <div class="form-control mb-4">
+                            <div class="form-control w-60 mb-4">
                                 <label for="policy" class="label">Policy</label>
                                 <InputSelect id="policy" @bind-Value="UserModel.Policy" class="select select-bordered">
                                     <option value="">Select Policy</option>
@@ -39,12 +39,12 @@
                                     }
                                 </InputSelect>
                             </div>
-                            <div class="form-control mb-4">
+                            <div class="form-control w-60 mb-4">
                                 <label for="password" class="label">User Password</label>
                                 <InputText id="password" @bind-Value="UserModel.Password"
                                     Type="@passwordState.PasswordType" class="input" />
                             </div>
-                            <div class="form-control mb-4 relative">
+                            <div class="form-control w-60 mb-4 relative">
                                 <label for="confirmPassword" class="label">Confirm Password</label>
                                 <InputText id="confirmPassword" @bind-Value="UserModel.ConfirmPassword"
                                     Type="@passwordState.PasswordType" class="input pr-10" />
@@ -58,7 +58,7 @@
                                 <button type="submit" class="btn btn-primary" disabled="@Loading">Create User</button>
                             </div>
                         </EditForm>
-                    </div>
+                
                 </div>
 
 
@@ -70,9 +70,9 @@
                 </div>
 
 
-            </div>
+    
 
-        </div>
+  
 
 
 
