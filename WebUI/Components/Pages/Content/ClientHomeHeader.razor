@@ -5,7 +5,12 @@
 @inject GenericHomeHeaderState homeGenericState
 
 <div>
-    <h3>Hi, Welcome Back</h3>
+      <div class="flex items-center justify-start p-2 ">
+            <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Order Data" : "Open Order Data"))</button>
+        </div>
+        @if (isOpen)
+        {
+              
     <div>
         <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true))">
             <i></i>
@@ -29,11 +34,19 @@
         </button>
 
     </div>
+
+        }
+        else 
+        {
+            <div></div>
+        }
+  
 </div>
 
 @code
 {
  [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+     private bool isOpen = false;
     protected override async Task OnInitializedAsync()
     {
        try{
@@ -47,5 +60,9 @@
 
     }
     public void Dispose() => userState.StateChanged -= StateHasChanged;
+            private void ToggleModel()
+    {
+        isOpen = !isOpen;
+    }
    
 }

@@ -4,7 +4,10 @@
 @inject GenericHomeHeaderState homeGenericState
 @inject AdminActiveOrderCountState adminState
 <div class=" flex justify-between items-center p-4 w-full">
-    <div>  <h3>Hi, Welcome Back</h3></div>
+    <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Order Status" : "Open Order Status"))</button>
+    @if(isOpen)
+    {
+      
   
     <div class="flex  gap-1 lg:gap-8 ">
         <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true))">
@@ -29,11 +32,17 @@
         </button>
 
     </div>
+    }
+    else{
+        <div></div>
+    }
+   
 </div>
 
 @code
 {
     public int Count { get; set; }
+    private bool isOpen = false;
     protected override async Task OnInitializedAsync()
     {
         adminState.StateChanged += StateHasChanged;
@@ -42,5 +51,9 @@
 
     }
     public void Dispose() => adminState.StateChanged -= StateHasChanged;
+              private void ToggleModel()
+    {
+        isOpen = !isOpen;
+    }
    
 }
