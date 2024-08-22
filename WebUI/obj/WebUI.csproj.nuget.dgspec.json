@@ -280,6 +280,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Blazored.Toast": {
+              "target": "Package",
+              "version": "[4.2.1, )"
+            },
             "Mapster": {
               "target": "Package",
               "version": "[7.4.1-pre01, )"
@@ -314,10 +318,6 @@
               "target": "Package",
               "version": "[1.0.1, )"
             },
-            "NetcodeHub.Packages.Components.Toast": {
-              "target": "Package",
-              "version": "[1.0.5, )"
-            },
             "NetcodeHub.Packages.Components.Validations": {
               "target": "Package",
               "version": "[1.0.1, )"
@@ -331,10 +331,6 @@
               "version": "[26.2.9, )"
             },
             "Syncfusion.Blazor.Grid": {
-              "target": "Package",
-              "version": "[26.2.9, )"
-            },
-            "Syncfusion.Blazor.Navigations": {
               "target": "Package",
               "version": "[26.2.9, )"
             },

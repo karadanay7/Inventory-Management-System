@@ -10,7 +10,7 @@
 @using WebUI.Components
 @using WebUI.Components.Layout.Main
 @using Microsoft.AspNetCore.Components.Authorization
-@using NetcodeHub.Packages.Components.Toast
+
 @using Microsoft.AspNetCore.Authorization
 @using Application.DTO.Request.Identity 
 @using NetcodeHub.Packages.Components.Validations.OnInput
@@ -19,6 +19,7 @@
 @using NetcodeHub.Packages.Components.Modal
 @using Syncfusion.Blazor.Navigations
 @using System.Security.Claims
+@using WebUI.Services
 @using WebUI.States.Administration
 @using WebUI.States.User
 @using Application.Extension
@@ -38,9 +39,11 @@
 @using WebUI.Hubs
 @using WebUI.States
 
-@using Syncfusion.Blazor.Notifications
 
+@using Blazored.Toast
+@using Blazored.Toast.Services
 
+@inject IToasterService ToasterService
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthState 
 @inject ChangePasswordState passwordState

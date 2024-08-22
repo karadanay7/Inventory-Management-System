@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "U+eOH3vThMI=",
+  "dgSpecHash": "DQQ4TNfjbX8=",
   "success": true,
   "projectFilePath": "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj",
   "expectedPackageFiles": [
     "/Users/aysegulkaradan/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/azure.identity/1.10.3/azure.identity.1.10.3.nupkg.sha512",
+    "/Users/aysegulkaradan/.nuget/packages/blazored.toast/4.2.1/blazored.toast.4.2.1.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/mapster/7.4.1-pre01/mapster.7.4.1-pre01.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/mapster.core/1.2.2-pre01/mapster.core.1.2.2-pre01.nupkg.sha512",
@@ -82,7 +83,6 @@
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.components.datagrid/1.0.1/netcodehub.packages.components.datagrid.1.0.1.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.components.fileupload/1.0.6/netcodehub.packages.components.fileupload.1.0.6.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.components.modal/1.0.1/netcodehub.packages.components.modal.1.0.1.nupkg.sha512",
-    "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.components.toast/1.0.5/netcodehub.packages.components.toast.1.0.5.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.components.validations/1.0.1/netcodehub.packages.components.validations.1.0.1.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.extensions.attributes.requiredguid/1.0.0/netcodehub.packages.extensions.attributes.requiredguid.1.0.0.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/netcodehub.packages.extensions.localstorage/1.0.0/netcodehub.packages.extensions.localstorage.1.0.0.nupkg.sha512",

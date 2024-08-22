@@ -5,6 +5,7 @@
 
 <PageTitle>Add User</PageTitle>
 <div class="w-full flex flex-col items-start justify-center  bg-base-200  ">
+    
     <AdminHomeHeader />
     <div class="justify-start">
         <Banner />
@@ -65,7 +66,7 @@
                 <div>
                     @if (Loading)
                     {
-                        <GenericSpinnerButton ButtonClass="btn btn-success" Text="Creating..." />
+                        <GenericSpinnerButton ButtonClass="btn btn-success"  />
                     }
                 </div>
 
@@ -92,7 +93,7 @@
 };
     [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
     private CreateUserRequestDTO UserModel { get; set; } = new();
-    NetcodeHubToast? ToastComponent;
+
     private bool Loading = false;
     private bool isModalOpen = false;
     private void OpenModal()
@@ -129,6 +130,7 @@ new string(Policy.ManagerPolicy)
             });
         if (response.Flag)
         {
+           
             @* await ToastComponent!.ShowSuccessToast("Info", response.Message); *@
             UserModel = new();
         }

@@ -1,9 +1,12 @@
 ﻿@page "/administration/account/users/manage"
 @using Application.DTO.Request
+@using Blazored.Toast.Configuration
 @rendermode InteractiveServer
+@inject IToastService ToasterService
 <PageTitle>Manage User</PageTitle>
 
-<div class=" mx-auto p-4 bg-base-200 min-h-screen ">
+<div class=" mx-auto p-4 bg-base-200  ">
+          <BlazoredToasts Position="ToastPosition.TopRight"/>
     <div class="mb-4">
         <AdminHomeHeader />
     </div>
@@ -154,7 +157,7 @@
     public bool isOpen { get; set; }
     void OpenModal() => isOpen = true;
     ChangeUserClaimRequestDTO ChangeUserClaim = new();
-    NetcodeHubToast? ToastComponent;
+  
     private HubConnection? hubConnection;
     [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
     List<string> Roles = new List<string>()
@@ -193,6 +196,7 @@ new string(Policy.RoleClaim.Manager),
     {
         user.Adapt(ChangeUserClaim);
         OpenModal();
+       
     }
     void CloseModelDialog()
     {
@@ -204,7 +208,7 @@ new string(Policy.RoleClaim.Manager),
         Loading = true;
         await Task.Delay(3000);
         var result = await accountService.UpdateUserAsync(ChangeUserClaim);
-      Console.WriteLine("result message: " + result);
+    
         await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
             {
                 UserId = (await UserAuthState!).User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
@@ -218,13 +222,17 @@ new string(Policy.RoleClaim.Manager),
         {
             
             await GetUsersWithClaims();
+                 ToasterService.ShowSuccess("User claims updated successfully");
 
         }
         else
         {
-            await ToastComponent!.ShowErrorToast("Alert", result.Message);
+              ToasterService.ShowError($"An unexpected error occurred. {result.Message}");
         }
         Loading = false;
+        CloseModelDialog();
+   
+       
     }
     private async Task GetUsersWithClaims()
     {
@@ -235,7 +243,7 @@ new string(Policy.RoleClaim.Manager),
         catch (Exception ex)
         {
             // Handle any exceptions that occur during the API call
-            await ToastComponent!.ShowErrorToast("Error", $"Failed to load users: {ex.Message}");
+             ToasterService.ShowError($"An unexpected error occurred. {ex.Message}");
         }
     }
     void StateButtonClicked()

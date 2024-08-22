@@ -10,10 +10,12 @@ using WebUI.States.Administration;
 using WebUI.States;
 using WebUI.States.User;
 using WebUI.Hubs;
-using Syncfusion.Blazor;
+
 using NetcodeHub.Packages.Components.DataGrid;
 using MudBlazor.Services;
 using MediatR;
+using Blazored.Toast;
+using WebUI.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +32,8 @@ builder.Services.AddScoped<AdminActiveOrderCountState>();
 builder.Services.AddScoped<GenericHomeHeaderState>();
 builder.Services.AddScoped<NetcodeHubConnectionService>();
 builder.Services.AddScoped<ICustomAuthorizationService, CustomAuthorizationService>();
-builder.Services.AddSyncfusionBlazor();
+
+
 builder.Services.AddVirtualizationService();
 
 
@@ -38,7 +41,8 @@ builder.Services.AddVirtualizationService();
 builder.Services.AddMudServices();
 builder.Services.AddSignalR();
 
-
+builder.Services.AddBlazoredToast();
+builder.Services.AddScoped<IToasterService, BlazoredToasterManager>();
 
 
 

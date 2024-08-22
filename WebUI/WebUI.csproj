@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.Toast" Version="4.2.1" />
     <PackageReference Include="Mapster" Version="7.4.1-pre01" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
@@ -18,12 +19,12 @@
     <PackageReference Include="NetcodeHub.Packages.Components.DataGrid" Version="1.0.1" />
     <PackageReference Include="NetcodeHub.Packages.Components.FileUpload" Version="1.0.6" />
     <PackageReference Include="NetcodeHub.Packages.Components.Modal" Version="1.0.1" />
-    <PackageReference Include="NetcodeHub.Packages.Components.Toast" Version="1.0.5" />
+   
     <PackageReference Include="NetcodeHub.Packages.Components.Validations" Version="1.0.1" />
     <PackageReference Include="NetcodeHub.Packages.UI.Templates.Breeze" Version="1.1.4" />
     <PackageReference Include="Syncfusion.Blazor.Charts" Version="26.2.9" />
     <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.2.9" />
-    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="26.2.9" />
+  
     <PackageReference Include="Syncfusion.Blazor.Themes" Version="26.2.9" />
    
   </ItemGroup>
