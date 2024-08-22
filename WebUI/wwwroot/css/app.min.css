@@ -2885,6 +2885,10 @@ html:has(.drawer-toggle:checked) {
   width: 10rem;
 }
 
+.w-36 {
+  width: 9rem;
+}
+
 .min-w-96 {
   min-width: 24rem;
 }
@@ -3083,6 +3087,16 @@ html:has(.drawer-toggle:checked) {
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
+}
+
+.bg-base-300 {
+  --tw-bg-opacity: 1;
+  background-color: var(--fallback-b3,oklch(var(--b3)/var(--tw-bg-opacity)));
+}
+
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .object-contain {
