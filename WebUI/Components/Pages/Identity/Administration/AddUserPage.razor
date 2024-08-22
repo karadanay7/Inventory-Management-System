@@ -1,10 +1,12 @@
 ﻿@page "/administration/account/create-user"
 @using Application.DTO.Request
+@using Blazored.Toast.Configuration
 @rendermode InteractiveServer
 @implements IDisposable
 
 <PageTitle>Add User</PageTitle>
 <div class="w-full flex flex-col items-start justify-center  bg-base-200  ">
+              <BlazoredToasts Position="ToastPosition.TopRight"/>
     
     <AdminHomeHeader />
     <div class="justify-start">
@@ -131,12 +133,14 @@ new string(Policy.ManagerPolicy)
         if (response.Flag)
         {
            
-            @* await ToastComponent!.ShowSuccessToast("Info", response.Message); *@
+         
             UserModel = new();
+                   ToasterService.ShowSuccess("User Created Successfully");
+                   
         }
         else
         {
-            @* await ToastComponent!.ShowErrorToast("Alert", response.Message); *@
+            ToasterService.ShowError(response.Message);
         }
         Loading = false;
 
