@@ -2704,6 +2704,10 @@ html:has(.drawer-toggle:checked) {
   top: 1rem;
 }
 
+.top-56 {
+  top: 14rem;
+}
+
 .z-50 {
   z-index: 50;
 }
@@ -3250,6 +3254,10 @@ html:has(.drawer-toggle:checked) {
 
   .lg\:top-0 {
     top: 0px;
+  }
+
+  .lg\:top-56 {
+    top: 14rem;
   }
 
   .lg\:ml-auto {

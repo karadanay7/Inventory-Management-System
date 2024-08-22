@@ -8,26 +8,26 @@
     <!-- Admin Section -->
     <AuthorizeView Policy="AdministrationPolicy">
          <div class="flex items-center justify-start p-2 ">
-            <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Data" : "Open Data"))</button>
+            <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Order Data" : "Open Order Data"))</button>
         </div>
         
 
       
        @if(isOpen)
        {
-           <div class="absolute top-48 bg-base-200 border border-base-300 p-2">
+           <div class="absolute top-52 lg:top-56 bg-base-200 p-2">
            
             <div class="  flex flex-wrap    gap-4">
                 <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <p class="text-lg font-semibold">Total Amount Ordered</p>
                         <span class="text-xl font-bold text-primary">
                             $ @AdminTotalAmountOfOrderedProduct.ToString("#,##0.00")
                         </span>
                     </div>
                 </div>
-                <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                <div class="card bg-base-100 shadow-xl ">
+                    <div class="card-body p-4  ">
                         <p class="text-lg font-semibold">Today’s Orders</p>
                         <span class="text-xl font-bold text-primary">
                             $ @AdminOnlyTodayOrderedProducts.ToString("#,##0.00")
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <p class="text-lg font-semibold">Today’s Orders %</p>
                         <span class="text-xl font-bold text-primary">
                             @AdminTodayOrdersPercentage.ToString("P")
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <p class="text-lg font-semibold">Gross Quantities Ordered</p>
                         <span class="text-xl font-bold text-primary">
                             @AdminGrossProductsQuantitiesOrdered
@@ -51,7 +51,7 @@
                     </div>
                 </div>
                 <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <p class="text-lg font-semibold">Today’s Quantities Ordered</p>
                         <span class="text-xl font-bold text-primary">
                             @AdminTodayProductsQuantitiesOrdered
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <p class="text-lg font-semibold">Last Month’s Orders %</p>
                         <span class="text-xl font-bold text-primary">
                             @AdminLastMonthProductOrderedPercentageOverAll.ToString("P")
