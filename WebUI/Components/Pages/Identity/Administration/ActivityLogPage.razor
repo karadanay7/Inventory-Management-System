@@ -1,5 +1,11 @@
 ﻿@page "/administration/account/activity-log"
+@using Application.DTO.Response
 @using Application.DTO.Response.ActivityTracker
+@inject IAccountService accountService
+@inject NavigationManager Navigation
+@inject ICustomAuthorizationService customAuthorizationService
+
+@using Microsoft.AspNetCore.Components.Authorization
 @rendermode InteractiveServer
 
 <PageTitle>Activity Log</PageTitle>
@@ -29,8 +35,8 @@
                                         <tr>
                                             <td>@activity.Title</td>
                                             <td>@activity.Description</td>
-                                            <td>@(activity.OperationState ? "Success" : "Failed")</td>
-                                            <td>@activity.UserId</td>
+                                           <!-- Assuming there is an OperationStatus property -->
+                                            <td>@activity.UserName</td> <!-- Assuming you have UserName property or fetch the name using UserId -->
                                         </tr>
                                     }
                                 </tbody>
@@ -49,20 +55,22 @@
 
 @code {
     private HubConnection? hubConnection;
-    private IEnumerable<IGrouping<DateTime, BaseActivityTracker>> Activities = Enumerable.Empty<IGrouping<DateTime, BaseActivityTracker>>();
+    private IEnumerable<IGrouping<DateTime, ActivityTrackerResponseDTO>> Activities = Enumerable.Empty<IGrouping<DateTime, ActivityTrackerResponseDTO>>();
     [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
 
     private async Task GetActivities()
     {
-        var activities = await accountService.GetActivitiesAsync();
-        Activities = activities.GroupBy(a => a.Date); // Grouping activities by Date
+        var activities = await accountService.GroupingActivitiesAsync();
+        Activities = activities; // Use the data directly
     }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (!customAuthorizationService.CustomClaimChecker((await UserAuthState!).User, DefaultClaims.ManageUser))
+        var authState = await UserAuthState;
+        if (!customAuthorizationService.CustomClaimChecker(authState.User, DefaultClaims.ManageUser))
         {
             Navigation.NavigateTo("/Account/Access-Denied");
+            return; // Exit early to prevent further execution
         }
 
         homeGenericState.StateChanged += StateButtonClicked;
@@ -72,22 +80,19 @@
         {
             await CallWhenNotified();
         });
-        if (hubConnection is not null)
+        if (hubConnection != null)
         {
             await hubConnection.StartAsync();
         }
     }
 
-    async Task CallWhenNotified()
+    private async Task CallWhenNotified()
     {
-        await InvokeAsync(async () =>
-        {
-            await GetActivities(); // Refresh activities when notified
-            StateHasChanged();
-        });
+        await GetActivities(); // Refresh activities when notified
+        StateHasChanged(); // Notify the UI to update
     }
 
-     void StateButtonClicked()
+    private void StateButtonClicked()
     {
         string adminOrderUrl = "app/administration/products/orders";
         if (homeGenericState.IsAdmin)

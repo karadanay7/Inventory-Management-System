@@ -16,6 +16,7 @@ public interface IAccountService
 
     Task SaveActivityAsync(ActivityTrackerRequestDTO model);
     Task <IEnumerable<ActivityTrackerResponseDTO>> GetActivitiesAsync();
+    Task<IEnumerable<IGrouping<DateTime, ActivityTrackerResponseDTO>>> GroupingActivitiesAsync();
     
 
 }
