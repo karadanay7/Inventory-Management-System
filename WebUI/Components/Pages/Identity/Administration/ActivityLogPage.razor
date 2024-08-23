@@ -1,0 +1,98 @@
+﻿@page "/administration/account/activity-log"
+@using Application.DTO.Response.ActivityTracker
+@rendermode InteractiveServer
+
+<PageTitle>Activity Log</PageTitle>
+<div>
+    <AdminHomeHeader />
+    <div>
+        <div class="card">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    @if (Activities != null && Activities.Any())
+                    {
+                        @foreach (var group in Activities)
+                        {
+                            <h3>@group.Key.ToString("g")</h3> <!-- Display the Date -->
+                            <table class="table w-full">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Operation Status</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var activity in group)
+                                    {
+                                        <tr>
+                                            <td>@activity.Title</td>
+                                            <td>@activity.Description</td>
+                                            <td>@(activity.OperationState ? "Success" : "Failed")</td>
+                                            <td>@activity.UserId</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    }
+                    else
+                    {
+                        <p>No activities found</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private HubConnection? hubConnection;
+    private IEnumerable<IGrouping<DateTime, BaseActivityTracker>> Activities = Enumerable.Empty<IGrouping<DateTime, BaseActivityTracker>>();
+    [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+
+    private async Task GetActivities()
+    {
+        var activities = await accountService.GetActivitiesAsync();
+        Activities = activities.GroupBy(a => a.Date); // Grouping activities by Date
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (!customAuthorizationService.CustomClaimChecker((await UserAuthState!).User, DefaultClaims.ManageUser))
+        {
+            Navigation.NavigateTo("/Account/Access-Denied");
+        }
+
+        homeGenericState.StateChanged += StateButtonClicked;
+        await GetActivities();
+        hubConnection = netcodeHubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+        if (hubConnection is not null)
+        {
+            await hubConnection.StartAsync();
+        }
+    }
+
+    async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+            await GetActivities(); // Refresh activities when notified
+            StateHasChanged();
+        });
+    }
+
+     void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
+}
