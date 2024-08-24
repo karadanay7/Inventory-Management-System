@@ -163,9 +163,9 @@ namespace Infrastructure.Repository
             {
                 var response = await CreateUserAsync(new CreateUserRequestDTO
                 {
-                    Name = "Manager",
-                    Email = "manager@manager.com",
-                    Password = "Manager@123",
+                    Name = "Admin",
+                    Email = "admin@admin.com",
+                    Password = "Admin@123",
                     Policy = Policy.ManagerPolicy
                 });
 

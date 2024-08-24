@@ -105,9 +105,8 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("OperationState")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("OperationState")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Title")
                         .IsRequired()
