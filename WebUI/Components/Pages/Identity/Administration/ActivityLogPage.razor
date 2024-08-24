@@ -65,26 +65,29 @@
     }
 
     protected override async Task OnInitializedAsync()
+{
+    var authState = await UserAuthState;
+    if (!customAuthorizationService.CustomClaimChecker(authState.User, DefaultClaims.ManageUser))
     {
-        var authState = await UserAuthState;
-        if (!customAuthorizationService.CustomClaimChecker(authState.User, DefaultClaims.ManageUser))
-        {
-            Navigation.NavigateTo("/Account/Access-Denied");
-            return; // Exit early to prevent further execution
-        }
-
-        homeGenericState.StateChanged += StateButtonClicked;
-        await GetActivities();
-        hubConnection = netcodeHubConnectionService.GetHubConnection();
-        hubConnection.On<string>("Notify", async (clientId) =>
-        {
-            await CallWhenNotified();
-        });
-        if (hubConnection != null)
-        {
-            await hubConnection.StartAsync();
-        }
+        Navigation.NavigateTo("/Account/Access-Denied");
+        return; // Exit early to prevent further execution
     }
+
+    homeGenericState.StateChanged += StateButtonClicked;
+    await GetActivities();
+
+    hubConnection = netcodeHubConnectionService.GetHubConnection();
+    hubConnection.On<string>("Notify", async (clientId) =>
+    {
+        await CallWhenNotified();
+    });
+
+    if (hubConnection.State == HubConnectionState.Disconnected)
+    {
+        await hubConnection.StartAsync();
+    }
+}
+
 
     private async Task CallWhenNotified()
     {
