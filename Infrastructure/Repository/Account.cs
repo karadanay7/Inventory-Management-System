@@ -166,7 +166,7 @@ namespace Infrastructure.Repository
                     Name = "Admin",
                     Email = "admin@admin.com",
                     Password = "Admin@123",
-                    Policy = Policy.ManagerPolicy
+                    Policy = Policy.AdminPolicy
                 });
 
                 if (response.Flag)
