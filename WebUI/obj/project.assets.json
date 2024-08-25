@@ -1991,7 +1991,7 @@
           }
         }
       },
-      "Syncfusion.Licensing/26.2.9": {
+      "Syncfusion.Licensing/26.2.10": {
         "type": "package",
         "compile": {
           "lib/net8.0/Syncfusion.Licensing.dll": {}
@@ -5496,10 +5496,10 @@
         "syncfusion_logo.png"
       ]
     },
-    "Syncfusion.Licensing/26.2.9": {
-      "sha512": "Ttx6OJ+srZimPk1MIi7B2EMd+wYiwDWNf90dX6a3IH51ze4PErV27LT5Fl8vgRM9mDxWd5dCGJdRAimXWjqDVw==",
+    "Syncfusion.Licensing/26.2.10": {
+      "sha512": "jUNNe4OC1PV2CfVCVT4/k2jj/42f0mTTBD5Sz4REMn/3bcbvTRGXHLXWgZwG/nvmh3N6X/12KE3XYw3sDY1dIw==",
       "type": "package",
-      "path": "syncfusion.licensing/26.2.9",
+      "path": "syncfusion.licensing/26.2.10",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -5516,7 +5516,7 @@
         "lib/net8.0/Syncfusion.Licensing.dll",
         "lib/netstandard2.0/Syncfusion.Licensing.dll",
         "lib/uap10.0/Syncfusion.Licensing.dll",
-        "syncfusion.licensing.26.2.9.nupkg.sha512",
+        "syncfusion.licensing.26.2.10.nupkg.sha512",
         "syncfusion.licensing.nuspec",
         "syncfusion_logo.png"
       ]
@@ -6757,7 +6757,8 @@
       "NetcodeHub.Packages.UI.Templates.Breeze >= 1.1.4",
       "Syncfusion.Blazor.Charts >= 26.2.9",
       "Syncfusion.Blazor.Grid >= 26.2.9",
-      "Syncfusion.Blazor.Themes >= 26.2.9"
+      "Syncfusion.Blazor.Themes >= 26.2.9",
+      "Syncfusion.Licensing >= 26.2.10"
     ]
   },
   "packageFolders": {
@@ -6866,6 +6867,10 @@
           "Syncfusion.Blazor.Themes": {
             "target": "Package",
             "version": "[26.2.9, )"
+          },
+          "Syncfusion.Licensing": {
+            "target": "Package",
+            "version": "[26.2.10, )"
           }
         },
         "imports": [

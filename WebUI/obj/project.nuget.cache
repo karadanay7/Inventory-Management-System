@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DQQ4TNfjbX8=",
+  "dgSpecHash": "OFZ/358brYM=",
   "success": true,
   "projectFilePath": "/Users/aysegulkaradan/Projects/IMS/WebUI/WebUI.csproj",
   "expectedPackageFiles": [
@@ -106,7 +106,7 @@
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.blazor.splitbuttons/26.2.9/syncfusion.blazor.splitbuttons.26.2.9.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.blazor.themes/26.2.9/syncfusion.blazor.themes.26.2.9.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.excelexport.net.core/26.2.9/syncfusion.excelexport.net.core.26.2.9.nupkg.sha512",
-    "/Users/aysegulkaradan/.nuget/packages/syncfusion.licensing/26.2.9/syncfusion.licensing.26.2.9.nupkg.sha512",
+    "/Users/aysegulkaradan/.nuget/packages/syncfusion.licensing/26.2.10/syncfusion.licensing.26.2.10.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/syncfusion.pdfexport.net.core/26.2.9/syncfusion.pdfexport.net.core.26.2.9.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/system.codedom/4.4.0/system.codedom.4.4.0.nupkg.sha512",
     "/Users/aysegulkaradan/.nuget/packages/system.collections.immutable/6.0.0/system.collections.immutable.6.0.0.nupkg.sha512",

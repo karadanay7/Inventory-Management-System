@@ -16,6 +16,7 @@ using MudBlazor.Services;
 using MediatR;
 using Blazored.Toast;
 using WebUI.Services;
+using Syncfusion.Blazor;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,7 @@ builder.Services.AddScoped<ICustomAuthorizationService, CustomAuthorizationServi
 
 
 builder.Services.AddVirtualizationService();
+builder.Services.AddSyncfusionBlazor();
 
 
 // Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ4NjMzQDMxMzgyZTM0MmUzMGJk");
