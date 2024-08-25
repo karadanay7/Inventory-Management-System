@@ -9,46 +9,56 @@
 @rendermode InteractiveServer
 
 <PageTitle>Activity Log</PageTitle>
-<div>
+<div class="p-6">
     <AdminHomeHeader />
-    <div>
-        <div class="card">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    @if (Activities != null && Activities.Any())
-                    {
-                        @foreach (var group in Activities)
-                        {
-                            <h3>@group.Key.ToString("g")</h3> <!-- Display the Date -->
-                            <table class="table w-full">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Operation Status</th>
-                                        <th>User</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var activity in group)
-                                    {
-                                        <tr>
-                                            <td>@activity.Title</td>
-                                            <td>@activity.Description</td>
-                                           <!-- Assuming there is an OperationStatus property -->
-                                            <td>@activity.UserName</td> <!-- Assuming you have UserName property or fetch the name using UserId -->
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        }
-                    }
-                    else
-                    {
-                        <p>No activities found</p>
-                    }
-                </div>
-            </div>
+    <div class="card shadow-lg">
+        <div class="card-body">
+            @if (Activities != null && Activities.Any())
+            {
+                @foreach (var group in Activities)
+                {
+                    <!-- Date Group Header -->
+                    <div class="collapse collapse-arrow border border-base-300 bg-base-200 rounded-box mb-4">
+                        <input type="checkbox" class="peer" />
+                        <div class="collapse-title text-xl font-medium">
+                            <i class="fas fa-calendar-alt"></i> @group.Key.ToString("dd MMMM yyyy")
+                        </div>
+                        <div class="collapse-content">
+                            <div class="overflow-x-auto">
+                                <table class="table w-full">
+                                    
+                                    <tbody>
+                                        @foreach (var activity in group)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <!-- Activity Title Dropdown -->
+                                                    <div class="collapse collapse-arrow border border-base-300  rounded-box">
+                                                        <input type="checkbox" class="peer" />
+                                                        <div class="collapse-title text-lg font-medium">
+                                                            <i class="fas fa-tasks"></i> @activity.Title
+                                                        </div>
+                                                        <div class="collapse-content">
+                                                            <p>@activity.Description</p>
+                                                            <p><strong>Operation Status:</strong> @activity.OperationState</p>
+                                                            <p><strong>User:</strong> @activity.UserName</p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                              
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No activities found</p>
+            }
         </div>
     </div>
 </div>
@@ -65,29 +75,28 @@
     }
 
     protected override async Task OnInitializedAsync()
-{
-    var authState = await UserAuthState;
-    if (!customAuthorizationService.CustomClaimChecker(authState.User, DefaultClaims.ManageUser))
     {
-        Navigation.NavigateTo("/Account/Access-Denied");
-        return; // Exit early to prevent further execution
+        var authState = await UserAuthState;
+        if (!customAuthorizationService.CustomClaimChecker(authState.User, DefaultClaims.ManageUser))
+        {
+            Navigation.NavigateTo("/Account/Access-Denied");
+            return; // Exit early to prevent further execution
+        }
+
+        homeGenericState.StateChanged += StateButtonClicked;
+        await GetActivities();
+
+        hubConnection = netcodeHubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+
+        if (hubConnection.State == HubConnectionState.Disconnected)
+        {
+            await hubConnection.StartAsync();
+        }
     }
-
-    homeGenericState.StateChanged += StateButtonClicked;
-    await GetActivities();
-
-    hubConnection = netcodeHubConnectionService.GetHubConnection();
-    hubConnection.On<string>("Notify", async (clientId) =>
-    {
-        await CallWhenNotified();
-    });
-
-    if (hubConnection.State == HubConnectionState.Disconnected)
-    {
-        await hubConnection.StartAsync();
-    }
-}
-
 
     private async Task CallWhenNotified()
     {
