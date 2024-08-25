@@ -2807,6 +2807,10 @@ html:has(.drawer-toggle:checked) {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-8 {
   height: 2rem;
 }
