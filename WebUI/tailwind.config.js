@@ -16,6 +16,7 @@ module.exports = {
       themes: [
           "pastel",
           "fantasy",
+          "winter"
           
       ],
   },
