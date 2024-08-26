@@ -19,7 +19,7 @@
 <div class=" mx-auto min-h-screen bg-base-200">
     <header class="flex justify-between items-center mb-4">
         <button @onclick="OpenModal" class="btn btn-primary">Create Product</button>
-        <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input w-full input-bordered" />
+        <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input  input-bordered" />
     </header>
 
     <div class="overflow-x-auto">
@@ -56,6 +56,12 @@
                             <td>@product.Description</td>
                         </tr>
                     }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="10" class="text-center">No products found</td>
+                    </tr>
                 }
             </tbody>
         </table>

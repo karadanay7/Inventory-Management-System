@@ -1,5 +1,62 @@
-﻿<h3>ProductDetails</h3>
+﻿@page "/app/products/details/{Id}"
+@using Application.DTO.Response.Products
+@using Application.Service.Products.Queries.Products
+@using MediatR
+@rendermode InteractiveServer
+@attribute [Authorize(Policy ="AdministraionPolicy")]
+<PageTitle>Product Details</PageTitle>
+<div>
+    @if(Product.Id != Guid.Empty)
+    {
+        <div class="flex flex-col md:flex-row">
+            <div class="w-full md:w-1/2">
+                <div class="flex justify-center">
+                    <img src="@Product.Base64Image" alt="@Product.Name" class="w-64 h-64" />
+                </div>
+            </div>
+            <div class="w-full md:w-1/2">
+                <h1 class="text-2xl font-bold text-center">@Product.Name</h1>
+                <p class="text-center">@Product.Description</p>
+                <p class="text-center text-2xl font-bold">@Product.Price</p>
+             
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="text-center text-2xl font-bold">Product not found</p>
+    } 
+</div>
+@code
+{
+   [Parameter] public string Id { get; set; }
+    private GetProductResponseDTO  Product { get; set; } = new ();
 
-@code {
+    protected async override Task OnParametersSetAsync()
+    {
+        homeGenericState.StateChanged += StateButtonClicked;
+        if(Guid.Parse(Id) != Guid.Empty)
+        {
+           GoToHomePage();
+        }
+        else 
+        {
+            using var scope =serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            Product = await mediator.Send(new GetProductByIdQuery(Guid.Parse(Id)));
 
-}
+        }
+    }
+    async Task GoToHomePage()
+    {
+        Navigation.NavigateTo("/app/home");
+    }
+       void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
+}   
