@@ -1,94 +1,147 @@
 ﻿@page "/app/products/manage"
+@rendermode InteractiveServer
 @attribute [Authorize(Policy = "AdministrationPolicy")]
 @using Application.DTO.Request
 @using Application.DTO.Request.Products
 @using Application.DTO.Response
 @using Application.DTO.Response.Products
+@using Application.Service.Products.Queries.Categories
+@using Application.Service.Products.Queries.Locations
 @using Application.Service.Products.Queries.Products
 @using Mapster
 @using MediatR
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <PageTitle>Products</PageTitle>
 
-<div class="container mx-auto p-4">
+<div class=" mx-auto min-h-screen bg-base-200">
     <header class="flex justify-between items-center mb-4">
-        <AdminHomeHeader />
         <button @onclick="OpenModal" class="btn btn-primary">Create Product</button>
-        <input type="search" @oninput="SearchProduct" class="input input-bordered" placeholder="Search..." />
+        <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input w-full input-bordered" />
     </header>
 
     <div class="overflow-x-auto">
-        <table class="table-auto w-full border-collapse border border-gray-200">
-            <thead class="bg-gray-100">
+        <table class="table table-zebra w-full">
+            <thead>
                 <tr>
-                    <th class="border border-gray-300 p-2">Image</th>
-                    <th class="border border-gray-300 p-2">Date Added</th>
-                    <th class="border border-gray-300 p-2">ID</th>
-                    <th class="border border-gray-300 p-2">Name</th>
-                    <th class="border border-gray-300 p-2">Serial Number</th>
-                    <th class="border border-gray-300 p-2">Price</th>
-                    <th class="border border-gray-300 p-2">Quantity</th>
-                    <th class="border border-gray-300 p-2">Category</th>
-                    <th class="border border-gray-300 p-2">Location</th>
-                    <th class="border border-gray-300 p-2">Description</th>
+                    <th>Image</th>
+                    <th>Date Added</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Serial Number</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Description</th>
                 </tr>
             </thead>
             <tbody>
-                @if (Products.Any())
+                @if (Products != null)
                 {
                     @foreach (var product in Products)
                     {
-                        <tr @onclick="() => SelectProduct(product)" class="cursor-pointer hover:bg-gray-100">
-                            <td class="border border-gray-300 p-2">
-                                <img src="@(product.Base64Image)" alt="@product.Name" class="w-16 h-16 object-cover" />
-                            </td>
-                            <td class="border border-gray-300 p-2">@product.DateAdded.ToShortDateString()</td>
-                            <td class="border border-gray-300 p-2">@product.Id</td>
-                            <td class="border border-gray-300 p-2">@product.Name</td>
-                            <td class="border border-gray-300 p-2">@product.SerialNumber</td>
-                            <td class="border border-gray-300 p-2">@product.Price.ToString("C")</td>
-                            <td class="border border-gray-300 p-2">@product.Quantity</td>
-                            <td class="border border-gray-300 p-2">@product.Category.Name</td>
-                            <td class="border border-gray-300 p-2">@product.Location.Name</td>
-                            <td class="border border-gray-300 p-2">@product.Description</td>
+                        <tr @onclick="() => SelectProduct(product)">
+                            <td><img src="@product.Base64Image" alt="@product.Name" class="w-16 h-16 object-cover" /></td>
+                            <td>@product.DateAdded.ToString("MM/dd/yyyy")</td>
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>@product.SerialNumber</td>
+                            <td>@product.Price</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Category.Name</td>
+                            <td>@product.Location.Name</td>
+                            <td>@product.Description</td>
                         </tr>
                     }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="10" class="border border-gray-300 p-2 text-center">No products found</td>
-                    </tr>
                 }
             </tbody>
         </table>
     </div>
 
-    <div class="flex justify-between items-center mt-4">
-        <div>
-            <button @onclick="PreviousPage" class="btn btn-secondary" disabled="@(!CanPreviousPage)">Previous</button>
-            <button @onclick="NextPage" class="btn btn-secondary" disabled="@(!CanNextPage)">Next</button>
-        </div>
-        <div>
-            Page @CurrentPage of @TotalPages
-        </div>
+    <div class="mt-4 flex justify-between items-center">
+        <button @onclick="PreviousPage" class="btn btn-secondary" disabled="@(!HasPreviousPage)">Previous</button>
+        <span>Page @CurrentPage of @TotalPages</span>
+        <button @onclick="NextPage" class="btn btn-secondary" disabled="@(!HasNextPage)">Next</button>
     </div>
 
-    <!-- Modal Background -->
-    <input type="checkbox" id="my-modal" class="modal-toggle" @bind="IsOpen" />
-    <label for="my-modal" class="modal cursor-pointer">
-        <label class="modal-box relative" for="my-modal" style="@ModalCustomStyle">
-            <div>
+    @if (IsOpen)
+    {
+        <div>
+            <div class=" flex items-center justify-center p-4 ">
                 @if (ShowProductPage)
                 {
-                    <!-- Content for Product Page -->
+                    <EditForm Model="@ProductModel" OnValidSubmit="SaveProduct" class="max-w-[400px]">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group">
+                            <label for="name" class="label">Name</label>
+                            <InputText id="name" class="input w-full" @bind-Value="ProductModel.Name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="serialNumber" class="label">Serial Number</label>
+                            <InputText id="serialNumber" class="input w-full" @bind-Value="ProductModel.SerialNumber" />
+                        </div>
+                        <div class="form-group">
+                            <label for="price" class="label">Price</label>
+                            <InputNumber id="price" type="Number" class="input w-full" @bind-Value="ProductModel.Price" />
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity" class="label">Quantity</label>
+                            <InputNumber id="quantity" type="Number" class="input w-full" @bind-Value="ProductModel.Quantity" />
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryId" class="label">Category</label>
+                            <select id="categoryId" class="select select-bordered w-full " @bind="ProductModel.CategoryId">
+                                @if (Categories != null)
+                                {
+                                    <option value="">Select Category</option>
+                                    @foreach (var category in Categories)
+                                    {
+                                        <option value="@category.Id"
+                                            selected="@(ProductModel.CategoryId == category.Id ? "selected" : null)">@category.Name
+                                        </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="locationId" class="label">Location</label>
+                            <select id="locationId" class="select select-bordered w-full " @bind="ProductModel.LocationId">
+                                @if (Categories != null)
+                                {
+                                    <option value="">Select Category</option>
+                                    @foreach (var location in Locations)
+                                    {
+                                        <option value="@location.Id"
+                                            selected="@(ProductModel.LocationId == location.Id ? "selected" : null)">@location.Name
+                                        </option>
+                                    }
+                                }
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="description" class="label">Description</label>
+                            <InputText id="description" class="input w-full" @bind-Value="ProductModel.Description" />
+                        </div>
+                        <div class="form-group">
+                            <label for="image" class="label">Image</label>
+                            <InputFile id="image" class="file-input w-full " OnChange="HandleFileUpload" />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </EditForm>
                 }
                 @if (ShowConfirmationPage)
                 {
-                    <div class="card">
+                    <div class="card card-bordered">
                         <div class="card-header">
-                            <i class="icon icon-warning"></i>
-                            <span>Confirm product deletion</span>
+                            <h2 class="card-title">Confirm Product Deletion</h2>
                         </div>
                         <div class="card-body">
                             <p>Are you sure you want to delete this product?</p>
@@ -96,7 +149,9 @@
                         <div class="card-footer">
                             @if (Loading)
                             {
-                                <button class="btn btn-danger" disabled>Deleting...</button>
+                                <button class="btn btn-danger" disabled>
+                                    <span class="loading loading-dots loading-sm"></span> Deleting
+                                </button>
                             }
                             else
                             {
@@ -106,30 +161,82 @@
                     </div>
                 }
             </div>
-        </label>
-    </label>
+        </div>
+    }
 </div>
 
 @code {
     private string ModalCustomStyle = string.Empty;
-    private string ModalTitle = "New Product";
     private bool ShowProductPage;
     private bool ShowConfirmationPage;
     public bool Loading { get; set; } = false;
     private bool IsOpen { get; set; }
-    private int CurrentPage { get; set; } = 1;
-    private int TotalPages { get; set; }
-    private int ItemsPerPage { get; set; } = 5;
-    private bool CanNextPage => CurrentPage < TotalPages;
-    private bool CanPreviousPage => CurrentPage > 1;
+    public int Duration { get; set; }
 
+    private List<ItemModel> Toolbaritems = new List<ItemModel>();
+    [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
     private IEnumerable<GetProductResponseDTO> Products { get; set; } = Enumerable.Empty<GetProductResponseDTO>();
     private IEnumerable<GetProductResponseDTO> PermanentProducts { get; set; } = Enumerable.Empty<GetProductResponseDTO>();
-    private GetProductResponseDTO SelectedProduct = new();
+    private IEnumerable<GetCategoryResponseDTO> Categories { get; set; } = Enumerable.Empty<GetCategoryResponseDTO>();
+    private IEnumerable<GetLocationResponseDTO> Locations { get; set; } = Enumerable.Empty<GetLocationResponseDTO>();
+    private AddProductRequestDTO ProductModel { get; set; } = new();
+    private GetProductResponseDTO SelectedProduct { get; set; } = new();
+
+    private bool HasPreviousPage => CurrentPage > 1;
+    private bool HasNextPage => CurrentPage < TotalPages;
+    private int CurrentPage { get; set; } = 1;
+    private int TotalPages { get; set; } = 1;
+    private Guid IdHolder { get; set; } = Guid.Empty;
+    private ClaimsPrincipal? User;
+    private HubConnection? hubConnection;
+    bool CanDelete = false;
 
     protected async override Task OnInitializedAsync()
     {
+        User = (await UserAuthState!).User;
+        CanDelete = customAuthorizationService.CustomClaimChecker(User, DefaultClaims.Delete);
+        homeGenericState.StateChanged += StateButtonClicked;
+        await LoadToolbarItems();
+        hubConnection = netcodeHubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+        if (hubConnection.State == HubConnectionState.Disconnected)
+        {
+            await hubConnection.StartAsync();
+        }
+        await GetDefaults();
+    }
+
+    private async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await adminState.GetActiveOrdersCount();
+        });
+    }
+
+    private async Task GetDefaults()
+    {
         await GetProducts();
+        await GetCategories();
+        await GetLocations();
+    }
+
+    private async Task GetCategories()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        Categories = await mediator.Send(new GetAllCategoriesQuery());
+    }
+
+    private async Task GetLocations()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        Locations = await mediator.Send(new GetAllLocationsQuery());
     }
 
     async Task GetProducts()
@@ -137,81 +244,89 @@
         using var scope = serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var result = await mediator.Send(new GetProductsQuery());
-        PermanentProducts = result;
-        Products = PermanentProducts.Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-        TotalPages = (int)Math.Ceiling(PermanentProducts.Count() / (double)ItemsPerPage);
+        Products = result;
+        PermanentProducts = Products;
     }
 
-    void OpenModal()
+    private async Task SearchProduct(Microsoft.AspNetCore.Components.ChangeEventArgs e)
     {
+        var searchText = e.Value?.ToString();
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            Products = PermanentProducts;
+        }
+        else
+        {
+            Products = PermanentProducts.Where(p => p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        }
+        StateHasChanged();
+    }
+
+    private void OpenModal()
+    {
+        ProductModel = new AddProductRequestDTO();
+        ShowProductPage = true;
         IsOpen = true;
-    }
-
-    private async Task ConfirmDelete()
-    {
-        Loading = true;
-        await Task.Delay(2000);
-        using var scope = serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        var response = await mediator.Send(new DeleteProductCommand(SelectedProduct.Id));
-        if (response.Flag)
-        {
-            await GetProducts();
-            ToasterService.ShowSuccess("Product Deleted Successfully");
-            SelectedProduct = new();
-            CloseModal();
-        }
-        else
-        {
-            ToasterService.ShowError(response.Message);
-        }
-        Loading = false;
-    }
-
-    void CloseModal()
-    {
-        IsOpen = false;
-        ShowProductPage = false;
-        ShowConfirmationPage = false;
-    }
-
-    void SearchProduct(Microsoft.AspNetCore.Components.ChangeEventArgs e)
-    {
-        var trimFilter = e.Value.ToString().Trim();
-        if (string.IsNullOrEmpty(trimFilter))
-        {
-            Products = PermanentProducts.Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-        }
-        else
-        {
-            Products = PermanentProducts.Where(x => x.Name.Contains(trimFilter, StringComparison.OrdinalIgnoreCase) || x.SerialNumber.Contains(trimFilter, StringComparison.OrdinalIgnoreCase))
-                                         .Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage);
-        }
-        TotalPages = (int)Math.Ceiling(Products.Count() / (double)ItemsPerPage);
+        ModalCustomStyle = "block";
     }
 
     private void SelectProduct(GetProductResponseDTO product)
     {
         SelectedProduct = product;
-        // Implement selection logic
+        ShowConfirmationPage = true;
     }
 
-    private async Task NextPage()
+    private void PreviousPage()
     {
-        if (CanNextPage)
+        if (CurrentPage > 1)
         {
-            CurrentPage++;
-            await GetProducts();
+            CurrentPage--;
+            GetProducts();
         }
     }
 
-    private async Task PreviousPage()
+    private void NextPage()
     {
-        if (CanPreviousPage)
+        if (CurrentPage < TotalPages)
         {
-            CurrentPage--;
-            await GetProducts();
+            CurrentPage++;
+            GetProducts();
+        }
+    }
+
+    private async Task SaveProduct()
+    {
+        // Save Product logic
+    }
+
+    private async Task ConfirmDelete()
+    {
+        // Confirm Delete logic
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+            ProductModel.Base64Image = Convert.ToBase64String(buffer);
+        }
+    }
+
+
+
+    private async Task LoadToolbarItems()
+    {
+        // Load toolbar items logic
+    }
+    void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
         }
     }
 }
-
