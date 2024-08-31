@@ -9,23 +9,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository.Products.Handlers.Categories;
 
-public class UpdateCategoryHandler(DataAccess.IDbContextFactory<AppDbContext> contextFactory) : IRequestHandler<UpdateCategoryCommand, ServiceResponse>
+public class UpdateCategoryHandler : IRequestHandler<UpdateCategoryCommand, ServiceResponse>
 {
-  public  async Task<ServiceResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
-  {
-    try
+    private readonly DataAccess.IDbContextFactory<AppDbContext> _contextFactory;
+
+    public UpdateCategoryHandler(DataAccess.IDbContextFactory<AppDbContext> contextFactory)
     {
-        using var dbContext = contextFactory.CreateDbContext();
-        var category = await dbContext.Categories.FirstOrDefaultAsync(x => x.Id.Equals(request.CategoryModel.Id), cancellationToken: cancellationToken);
-        if (category == null) return  GeneralDbResponses.ItemNotFound(request.CategoryModel.Name);
-        dbContext.Entry(category).State = EntityState.Detached;
-        var adaptData = request.CategoryModel.Adapt(new Category());
-        await dbContext.SaveChangesAsync(cancellationToken);
-        return GeneralDbResponses.ItemUpdated(request.CategoryModel.Name);
+        _contextFactory = contextFactory;
     }
-    catch (Exception ex)
+
+    public async Task<ServiceResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        return new ServiceResponse(true, ex.Message);
+        try
+        {
+            using var dbContext = _contextFactory.CreateDbContext();
+
+            var category = await dbContext.Categories
+                .FirstOrDefaultAsync(x => x.Id == request.CategoryModel.Id, cancellationToken);
+
+            if (category == null)
+                return GeneralDbResponses.ItemNotFound(request.CategoryModel.Name);
+
+            // Update the properties of the existing category
+            category.Name = request.CategoryModel.Name;
+
+            // No need to attach or detach, just update the entity's properties
+            dbContext.Categories.Update(category);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return GeneralDbResponses.ItemUpdated(request.CategoryModel.Name);
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse(false, ex.Message);
+        }
     }
-  }
 }
+

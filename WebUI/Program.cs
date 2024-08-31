@@ -54,7 +54,7 @@ builder.Logging.AddConsole();
 
 
 var app = builder.Build();
-
+builder.Logging.AddConsole();
 // Test database connection
 var serviceProvider = builder.Services.BuildServiceProvider();
 var mediator = serviceProvider.GetService<IMediator>();
