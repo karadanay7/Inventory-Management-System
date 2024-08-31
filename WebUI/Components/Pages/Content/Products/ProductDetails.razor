@@ -5,6 +5,7 @@
 @rendermode InteractiveServer
 @attribute [Authorize(Policy ="AdministraionPolicy")]
 <PageTitle>Product Details</PageTitle>
+<AdminHomeHeader />
 <div>
     @if(Product.Id != Guid.Empty)
     {

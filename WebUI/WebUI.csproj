@@ -36,4 +36,9 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components/Pages/Content/Products/Location/" />
+    <Folder Include="Components/Pages/Content/Products/Orders/" />
+  </ItemGroup>
+
 </Project>

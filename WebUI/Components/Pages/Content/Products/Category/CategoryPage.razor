@@ -1,0 +1,241 @@
+﻿@page "/app/products/category/manage"
+@rendermode InteractiveServer
+@attribute [Authorize(Policy = "AdministrationPolicy")]
+@using Application.DTO.Request
+@using Application.DTO.Response
+@using Application.DTO.Response.Products
+@using Application.DTO.Request.Products
+@using Application.Service.Products.Queries.Categories
+
+@using Blazored.Toast.Configuration
+@using Mapster
+@using MediatR
+@using Microsoft.AspNetCore.Components.Forms
+@using System.Security.Claims
+
+<PageTitle>Categories</PageTitle>
+<BlazoredToasts Position="ToastPosition.BottomRight" />
+
+<div class="mx-auto min-h-screen bg-base-200">
+    <header class="flex justify-between items-center mb-4">
+        <button @onclick="OpenCreateCategoryModal" class="btn btn-primary">Create Category</button>
+        <input type="search" @oninput="SearchCategory" placeholder="Search..." class="input input-bordered" />
+    </header>
+
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>Serial No</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Categories.Any())
+                {
+                    int serialNumber = 1;
+                    @foreach (var category in Categories)
+                    {
+                        <tr>
+                            <td>@serialNumber</td>
+                            <td>@category.Id</td>
+                            <td>@category.Name</td>
+                            <td>
+                                <button @onclick="() => OpenEditCategoryModal(category)" class="btn btn-sm btn-warning">✏️</button>
+                                <button @onclick="() => ConfirmDeleteCategory(category.Id)" class="btn btn-sm btn-danger">🗑️</button>
+                            </td>
+                        </tr>
+                        serialNumber++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">No categories found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (IsCategoryModalOpen)
+    {
+        <div class="modal modal-open">
+            <div class="modal-box bg-base-200">
+                <h2 class="font-bold text-lg">@CategoryModalTitle</h2>
+                <EditForm Model="@CategoryModel" OnSubmit="SaveCategory">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="form-group">
+                        <label for="name" class="label">Name</label>
+                        <InputText id="name" class="input w-full" @bind-Value="CategoryModel.Name" />
+                    </div>
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary ">@CategoryModalButtonText</button>
+                        <button type="button" @onclick="CloseCategoryModal" class="btn btn-secondary ml-2">Cancel</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<GetCategoryResponseDTO> Categories { get; set; } = Enumerable.Empty<GetCategoryResponseDTO>();
+    private AddCategoryRequestDTO CategoryModel { get; set; } = new();
+    private bool IsCategoryModalOpen { get; set; } = false;
+    private string CategoryModalTitle { get; set; } = "Create Category";
+    private string CategoryModalButtonText { get; set; } = "Create";
+    private IEnumerable<GetCategoryResponseDTO> PermanentCategories { get; set; } = Enumerable.Empty<GetCategoryResponseDTO>();
+
+    [CascadingParameter] public Task<AuthenticationState> UserAuthState { get; set; }
+    private ClaimsPrincipal? User;
+    private bool Loading { get; set; } = false;
+    private Guid IdHolder { get; set; } = Guid.Empty;
+    private HubConnection hubConnection;
+    bool CanDelete = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+       User = (await UserAuthState).User;
+      CanDelete = customAuthorizationService.CustomClaimChecker(User, DefaultClaims.Delete);
+       homeGenericState.StateChanged +=StateButtonClicked;
+       await LoadCategories();
+       hubConnection = netcodeHubConnectionService.GetHubConnection();
+       hubConnection.On<string>("Notify", async (clientId) =>
+       {
+           await CallWhenNotified();
+       });
+           if (hubConnection.State == HubConnectionState.Disconnected)
+        
+            await hubConnection.StartAsync();
+        
+       
+    }
+      void StateButtonClicked()
+    {
+        string adminOrderUrl = "app/administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
+    async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+           StateHasChanged();
+        });
+    }
+
+    private async Task LoadCategories()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        Categories = await mediator.Send(new GetAllCategoriesQuery());
+        PermanentCategories = Categories.ToList();
+    }
+
+    private void OpenCreateCategoryModal()
+    {
+        CategoryModel = new AddCategoryRequestDTO();
+        CategoryModalTitle = "Create Category";
+        CategoryModalButtonText = "Create";
+        IsCategoryModalOpen = true;
+    }
+
+    private void OpenEditCategoryModal(GetCategoryResponseDTO category)
+    {
+        CategoryModel = category.Adapt<AddCategoryRequestDTO>();
+        CategoryModalTitle = "Edit Category";
+        CategoryModalButtonText = "Save";
+        IdHolder = category.Id;
+        IsCategoryModalOpen = true;
+    }
+
+    private void CloseCategoryModal()
+    {
+        IsCategoryModalOpen = false;
+        IdHolder = Guid.Empty;
+    }
+
+   private async Task SaveCategory()
+{
+    Loading = true;
+    ServiceResponse response;
+    using var scope = serviceProvider.CreateScope();
+    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+    if (IdHolder != Guid.Empty)
+    {
+        var update = CategoryModel.Adapt<UpdateCategoryRequestDTO>();
+        update.Id = IdHolder;
+        response = await mediator.Send(new UpdateCategoryCommand(update));
+    }
+    else
+    {
+        response = await mediator.Send(new CreateCategoryCommand(CategoryModel));
+    }
+
+    await SaveActivity(response);
+
+    if (response.Flag)
+    {
+        await LoadCategories(); // Ensure this is reloading with the updated data
+        ToasterService.ShowSuccess(response.Message);
+        CloseCategoryModal();
+    }
+    else
+    {
+        ToasterService.ShowError(response.Message);
+    }
+
+    Loading = false;
+}
+
+    private async Task SaveActivity(ServiceResponse response)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var accountService = scope.ServiceProvider.GetRequiredService<IAccountService>();
+        await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO
+        {
+            UserId = User!.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value,
+            Title = IdHolder != Guid.Empty ? "Update Category method called" : "Add Category method called",
+            Description = response.Message,
+            OperationState = response.Flag,
+            Date = DateTime.UtcNow
+        });
+    }
+
+    private async Task ConfirmDeleteCategory(Guid categoryId)
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(new DeleteCategoryCommand(categoryId));
+
+        await SaveActivity(response);
+
+        if (response.Flag)
+        {
+            ToasterService.ShowSuccess("Category deleted successfully");
+            await LoadCategories();
+        }
+        else
+        {
+            ToasterService.ShowError(response.Message);
+        }
+    }
+
+    private void SearchCategory(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        var searchText = e.Value?.ToString();
+        Categories = string.IsNullOrWhiteSpace(searchText)
+            ? PermanentCategories
+            : PermanentCategories.Where(c => c.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+
+        StateHasChanged();
+    }
+}
