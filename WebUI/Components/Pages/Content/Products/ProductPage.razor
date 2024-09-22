@@ -166,9 +166,9 @@
                         <label for="image" class="label">Image</label>
                         <InputFile id="image" class="file-input w-full" OnChange="HandleFileUpload" />
                     </div>
-                    <div class="form-group mt-4">
+                    <div class="form-group mt-4 flex justify-between">
                         <button type="submit" class="btn btn-primary">@ProductModalButtonText</button>
-                        <button type="button" @onclick="CloseProductModal" class="btn btn-secondary ml-2">Cancel</button>
+                        <button type="button" @onclick="CloseProductModal" class="btn btn-secondary">Cancel</button>
                     </div>
                 </EditForm>
             </div>
