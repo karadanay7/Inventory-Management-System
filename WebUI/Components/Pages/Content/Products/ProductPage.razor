@@ -18,17 +18,23 @@
 <PageTitle>Products</PageTitle>
 <BlazoredToasts Position="ToastPosition.BottomRight" />
 
-<div class=" mx-auto min-h-screen bg-base-200 p-2">
-    <header class=" flex flex-col md:flex-row  items-center justify-between  gap-2">
-    
+<div class="mx-auto min-h-screen bg-base-200 p-2">
+    <header class="flex flex-col md:flex-row items-center justify-between gap-2 mb-4">
         <button @onclick="OpenCreateProductModal" class="btn btn-primary">Create Product</button>
-        <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input  input-bordered " />
+        <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input input-bordered" />
     </header>
 
-    <div class="overflow-x-auto ">
+    <div class="mb-4 flex justify-end space-x-2">
+        <button @onclick="() => NavigateToProductDetails(SelectedProductId)" class="btn btn-info" disabled="@(SelectedProductId == Guid.Empty)">View</button>
+        <button @onclick="() => OpenEditProductModal(SelectedProductId)" class="btn btn-warning" disabled="@(SelectedProductId == Guid.Empty)">Edit</button>
+        <button @onclick="() => OpenConfirmationModal(SelectedProductId)" class="btn btn-danger" disabled="@(SelectedProductId == Guid.Empty)">Delete</button>
+    </div>
+
+    <div class="overflow-x-auto">
         <table class="table table-zebra w-full">
             <thead>
                 <tr>
+                    <th></th> <!-- New column for radio button -->
                     <th>Image</th>
                     <th>Date Added</th>
                     <th>ID</th>
@@ -39,7 +45,6 @@
                     <th>Category</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,7 +52,15 @@
                 {
                     @foreach (var product in Products)
                     {
-                        <tr>
+                        <tr class="hover:bg-base-200">
+                            <td>
+                                <input type="radio" 
+                                       name="selectedProduct" 
+                                       value="@product.Id" 
+                                       checked="@(product.Id == SelectedProductId)"
+                                       @onchange="() => SelectProduct(product.Id)" 
+                                       class="radio radio-primary" />
+                            </td>
                             <td>
                                 @if (!string.IsNullOrEmpty(product.Base64Image))
                                 {
@@ -67,12 +80,6 @@
                             <td>@product.Category.Name</td>
                             <td>@product.Location.Name</td>
                             <td>@product.Description</td>
-                            <td>
-                                <div class="flex space-x-2">
-                                    <button @onclick="() => OpenEditProductModal(product)" class="btn btn-sm btn-warning">✏️</button>
-                                    <button @onclick="() => OpenConfirmationModal(product.Id)" class="btn btn-sm btn-danger">🗑️</button>
-                                </div>
-                            </td>
                         </tr>
                     }
                 }
@@ -92,7 +99,7 @@
         <button @onclick="NextPage" class="btn btn-secondary" disabled="@(!HasNextPage)">Next</button>
     </div>
 
-    @if (IsProductModalOpen)
+    @if (IsOpen)
     {
         <div class="modal modal-open">
             <div class="modal-box bg-base-200">
@@ -180,7 +187,7 @@
 @code {
     private string ModalCustomStyle = string.Empty;
     public bool Loading { get; set; } = false;
-    private bool IsProductModalOpen { get; set; } = false;
+    private bool IsOpen { get; set; } = false;
     private string ProductModalTitle { get; set; } = "Create Product";
     private string ProductModalButtonText { get; set; } = "Create";
     public int Duration { get; set; }
@@ -203,6 +210,15 @@
     private ClaimsPrincipal? User;
     private HubConnection? hubConnection;
     bool CanDelete = false;
+    
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private void NavigateToProductDetails(Guid productId)
+    {
+        NavigationManager.NavigateTo($"/app/products/details/{productId}");
+    }
     
 
     protected async override Task OnInitializedAsync()
@@ -281,23 +297,27 @@
         ProductModel = new AddProductRequestDTO();
         ProductModalTitle = "Create Product";
         ProductModalButtonText = "Create";
-        IsProductModalOpen = true;
+        IsOpen = true;
     }
 
     private void CloseProductModal()
     {
-        IsProductModalOpen = false;
+        IsOpen = false;
         ProductModel = new AddProductRequestDTO();
         IdHolder = Guid.Empty;
     }
 
-    private void OpenEditProductModal(GetProductResponseDTO product)
+    private void OpenEditProductModal(Guid productId)
     {
-        ProductModel = product.Adapt<AddProductRequestDTO>();
-        IdHolder = product.Id;
-        ProductModalTitle = "Edit Product";
-        ProductModalButtonText = "Save";
-        IsProductModalOpen = true;
+        var product = Products.FirstOrDefault(p => p.Id == productId);
+        if (product != null)
+        {
+            ProductModel = product.Adapt<AddProductRequestDTO>();
+            IdHolder = product.Id;
+            ProductModalTitle = "Edit Product";
+            ProductModalButtonText = "Save";
+            IsOpen = true;
+        }
     }
 
     private void OpenConfirmationModal(Guid productId)
@@ -419,5 +439,13 @@
             CurrentPage++;
             GetProducts();
         }
+    }
+
+    private Guid SelectedProductId { get; set; } = Guid.Empty;
+
+    private void SelectProduct(Guid productId)
+    {
+        SelectedProductId = productId;
+        StateHasChanged();
     }
 }
