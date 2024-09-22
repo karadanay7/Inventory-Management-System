@@ -20,14 +20,28 @@
 
 <div class="mx-auto min-h-screen bg-base-200 p-2">
     <header class="flex flex-col md:flex-row items-center justify-between gap-2 mb-4">
-        <button @onclick="OpenCreateProductModal" class="btn btn-primary">Create Product</button>
+        <button @onclick="OpenCreateProductModal" class="btn btn-primary">
+            <i class="fas fa-plus mr-2"></i> Create Product
+        </button>
         <input type="search" @oninput="SearchProduct" placeholder="Search..." class="input input-bordered" />
     </header>
 
-    <div class="mb-4 flex justify-end space-x-2">
-        <button @onclick="() => NavigateToProductDetails(SelectedProductId)" class="btn btn-info" disabled="@(SelectedProductId == Guid.Empty)">View</button>
-        <button @onclick="() => OpenEditProductModal(SelectedProductId)" class="btn btn-warning" disabled="@(SelectedProductId == Guid.Empty)">Edit</button>
-        <button @onclick="() => OpenConfirmationModal(SelectedProductId)" class="btn btn-danger" disabled="@(SelectedProductId == Guid.Empty)">Delete</button>
+    <div class="mb-4 flex justify-end gap-2">
+        <button @onclick="() => NavigateToProductDetails(SelectedProductId)" 
+                class="btn btn-success" 
+                disabled="@(SelectedProductId == Guid.Empty)">
+            <i class="fas fa-eye mr-2"></i> View
+        </button>
+        <button @onclick="() => OpenEditProductModal(SelectedProductId)" 
+                class="btn btn-warning" 
+                disabled="@(SelectedProductId == Guid.Empty)">
+            <i class="fas fa-edit mr-2"></i> Edit
+        </button>
+        <button @onclick="() => OpenConfirmationModal(SelectedProductId)" 
+                class="btn btn-error" 
+                disabled="@(SelectedProductId == Guid.Empty || !CanDelete)">
+            <i class="fas fa-trash-alt mr-2"></i> Delete
+        </button>
     </div>
 
     <div class="overflow-x-auto">
@@ -376,33 +390,42 @@
     {
         Loading = true;
         ServiceResponse response;
-        using var scope = serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        if (IdHolder != Guid.Empty)
-        {
-            var update = ProductModel.Adapt<UpdateProductRequestDTO>();
-            update.Id = IdHolder;
-            response = await mediator.Send(new UpdateProductCommand(update));
-        }
-        else
-        {
-            response = await mediator.Send(new CreateProductCommand(ProductModel));
-        }
+            if (IdHolder != Guid.Empty)
+            {
+                var update = ProductModel.Adapt<UpdateProductRequestDTO>();
+                update.Id = IdHolder;
+                response = await mediator.Send(new UpdateProductCommand(update));
+            }
+            else
+            {
+                response = await mediator.Send(new CreateProductCommand(ProductModel));
+            }
 
-        if (response.Flag)
-        {
-            await GetProducts();
-            ToasterService.ShowSuccess(response.Message);
-            CloseProductModal();
+            if (response.Flag)
+            {
+                await GetProducts();
+                ToasterService.ShowSuccess(response.Message);
+                CloseProductModal();
+            }
+            else
+            {
+                ToasterService.ShowError(response.Message);
+            }
         }
-        else
+        catch (Exception ex)
         {
-            ToasterService.ShowError(response.Message);
+            Console.WriteLine($"Error saving product: {ex.Message}");
+            ToasterService.ShowError("An error occurred while saving the product.");
         }
-
-        Loading = false;
-        
+        finally
+        {
+            Loading = false;
+        }
     }
 
     private async Task HandleFileUpload(InputFileChangeEventArgs e)
@@ -460,7 +483,7 @@
     private void DebugNavigation()
     {
         Guid debugProductId = Guid.NewGuid(); // Replace this with a known valid product ID
-
+        
         NavigationManager.NavigateTo($"/app/products/details/{debugProductId}");
     }
 }
