@@ -217,6 +217,14 @@
 
     private void NavigateToProductDetails(Guid productId)
     {
+        if (productId == Guid.Empty)
+        {
+            
+            ToasterService.ShowError("No product selected");
+            return;
+        }
+
+        
         NavigationManager.NavigateTo($"/app/products/details/{productId}");
     }
     
@@ -447,5 +455,12 @@
     {
         SelectedProductId = productId;
         StateHasChanged();
+    }
+
+    private void DebugNavigation()
+    {
+        Guid debugProductId = Guid.NewGuid(); // Replace this with a known valid product ID
+
+        NavigationManager.NavigateTo($"/app/products/details/{debugProductId}");
     }
 }
