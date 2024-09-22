@@ -1,63 +1,90 @@
-﻿@page "/app/products/details/{Id}"
+﻿@page "/app/products/details/{ProductId:guid}"
+@rendermode InteractiveServer
 @using Application.DTO.Response.Products
 @using Application.Service.Products.Queries.Products
 @using MediatR
-@rendermode InteractiveServer
-@attribute [Authorize(Policy ="AdministraionPolicy")]
-<PageTitle>Product Details</PageTitle>
+
+@attribute [Authorize(Policy = "AdministrationPolicy")]
+<PageTitle>Product Details - Inventory Management</PageTitle>
 <AdminHomeHeader />
-<div>
-    @if(Product.Id != Guid.Empty)
+
+<div class="mx-auto p-4 min-h-screen ">
+    @if (Product != null)
     {
-        <div class="flex flex-col md:flex-row">
-            <div class="w-full md:w-1/2">
-                <div class="flex justify-center">
-                    <img src="@Product.Base64Image" alt="@Product.Name" class="w-64 h-64" />
+        <div class=" shadow-lg rounded-lg overflow-hidden mb-8">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-gray-800">@Product.Name</h1>
+                    <button class="btn btn-primary" @onclick="GoBack">Back to Products</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="flex justify-center items-center bg-gray-200 rounded-lg overflow-hidden" style="height: 400px;">
+                        @if (!string.IsNullOrEmpty(Product.Base64Image))
+                        {
+                            <img src="data:image/png;base64,@Product.Base64Image" alt="@Product.Name" class="object-contain h-full w-full" />
+                        }
+                        else
+                        {
+                            <span class="text-gray-500 text-xl">No image available</span>
+                        }
+                    </div>
+                    <div class="space-y-4">
+                        <div class="bg-blue-100 p-4 rounded-lg">
+                            <h2 class="text-xl font-semibold text-blue-800 mb-2">Product Information</h2>
+                            <p><span class="font-medium">ID:</span> @Product.Id</p>
+                            <p><span class="font-medium">Serial Number:</span> @Product.SerialNumber</p>
+                            <p><span class="font-medium">Price:</span> @Product.Price.ToString("C")</p>
+                            <p><span class="font-medium">Quantity:</span> @Product.Quantity</p>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-lg">
+                            <h2 class="text-xl font-semibold text-green-800 mb-2">Category & Location</h2>
+                            <p><span class="font-medium">Category:</span> @Product.Category.Name</p>
+                            <p><span class="font-medium">Location:</span> @Product.Location.Name</p>
+                        </div>
+                        <div class="bg-yellow-100 p-4 rounded-lg">
+                            <h2 class="text-xl font-semibold text-yellow-800 mb-2">Additional Details</h2>
+                            <p><span class="font-medium">Date Added:</span> @Product.DateAdded.ToString("MM/dd/yyyy")</p>
+                            <p><span class="font-medium">Description:</span> @Product.Description</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="w-full md:w-1/2">
-                <h1 class="text-2xl font-bold text-center">@Product.Name</h1>
-                <p class="text-center">@Product.Description</p>
-                <p class="text-center text-2xl font-bold">@Product.Price</p>
-             
-            </div>
         </div>
+       
     }
     else
     {
-        <p class="text-center text-2xl font-bold">Product not found</p>
-    } 
+        <div class="flex justify-center items-center h-64">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+    }
 </div>
-@code
-{
-   [Parameter] public string Id { get; set; }
-    private GetProductResponseDTO  Product { get; set; } = new ();
 
-    protected async override Task OnParametersSetAsync()
-    {
-        homeGenericState.StateChanged += StateButtonClicked;
-        if(Guid.Parse(Id) != Guid.Empty)
-        {
-           GoToHomePage();
-        }
-        else 
-        {
-            using var scope =serviceProvider.CreateScope();
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            Product = await mediator.Send(new GetProductByIdQuery(Guid.Parse(Id)));
+@code {
+    [Parameter]
+    public Guid ProductId { get; set; }
 
-        }
-    }
-    async Task GoToHomePage()
+    private GetProductResponseDTO Product { get; set; }
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    private IMediator Mediator { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        Navigation.NavigateTo("/app/home");
+        await LoadProductDetails();
     }
-       void StateButtonClicked()
+
+    private async Task LoadProductDetails()
     {
-        string adminOrderUrl = "app/administration/products/orders";
-        if (homeGenericState.IsAdmin)
-        {
-            Navigation.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
-        }
+        var query = new GetProductByIdQuery(ProductId);
+        Product = await Mediator.Send(query);
     }
-}   
+
+    private void GoBack()
+    {
+        NavigationManager.NavigateTo("/app/products/manage");
+    }
+}
