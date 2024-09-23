@@ -1,0 +1,328 @@
+@page "/app/administration/products/orders"
+@page "/app/administration/products/orders/{OrderStateParam}"
+@rendermode InteractiveServer
+
+@using Application.DTO.Response.Orders
+@using Application.DTO.Request.Orders
+@using Microsoft.AspNetCore.Components.Authorization
+@using Application.DTO.Response
+@using MediatR
+@using Mapster
+@using Application.Service.Orders.Commands
+@using Microsoft.AspNetCore.SignalR.Client
+
+<PageTitle>Orders</PageTitle>
+
+<div class="mx-auto min-h-screen bg-base-200 p-4">
+    <AdminHomeHeader />
+
+    <div class="flex flex-col md:flex-row">
+        <div class="w-full md:w-1/4">
+            <div class="card shadow-lg bg-base-100">
+                <div class="card-body">
+                    <div class="form-control mb-4">
+                        <input type="text" placeholder="Search Order" @oninput="SearchOrder" class="input input-bordered" />
+                    </div>
+                    <div class="form-control">
+                        <select class="select select-bordered" @onchange="(e) => FilterOrders(e.Value?.ToString())">
+                            <option value="">All States</option>
+                            @foreach (var state in OrderStates)
+                            {
+                                <option value="@state">@state</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-control mt-4">
+                        <button class="btn btn-primary" @onclick="OpenCreateOrderModal">Create Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="w-full md:w-3/4">
+            <div class="card shadow-lg bg-base-100">
+                <div class="card-body">
+                    <div class="overflow-x-auto">
+                        <table class="table w-full">
+                            <thead>
+                                <tr>
+                                    <th>Client Name</th>
+                                    <th>State</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in TemporalOrders)
+                                {
+                                    <tr>
+                                        <td>@order.ClientName</td>
+                                        <td>@order.State</td>
+                                        <td>
+                                            <button class="btn btn-primary" @onclick="@(e => OpenEditOrderModal(order.Id))">Edit</button>
+                                            <button class="btn btn-error" @onclick="@(e => OpenConfirmationModal(order.Id))">Delete</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between mt-4">
+                        <button class="btn btn-primary" @onclick="PreviousPage">Previous</button>
+                        <button class="btn btn-primary" @onclick="NextPage">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Order Modal -->
+    @if (IsOpen)
+    {
+        <OrderModal 
+            IsOpen="IsOpen" 
+            OrderModel="UpdateOrderModel" 
+            OnClose="CloseOrderModal" 
+            OnSave="SaveOrder" 
+            ModalTitle="@OrderModalTitle" 
+            ModalButtonText="@OrderModalButtonText" />
+    }
+
+    <!-- Confirmation Modal -->
+    @if (IsConfirmationModalOpen)
+    {
+        <ConfirmationModal 
+            IsOpen="IsConfirmationModalOpen" 
+            OnClose="CloseConfirmationModal" 
+            OnConfirm="ConfirmDelete" />
+    }
+</div>
+
+@code {
+    public bool Loading { get; set; } = false;
+    public bool IsOpen { get; set; } = false;
+    public bool IsConfirmationModalOpen { get; set; } = false;
+    [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
+    private IEnumerable<GetOrderResponseDTO> TemporalOrders { get; set; } = [];
+    private IEnumerable<GetOrderResponseDTO> PermanentOrders { get; set; } = [];
+    private UpdateClientOrderRequestDTO UpdateOrderModel { get; set; } = new();
+    private CreateOrderRequestDTO CreateOrderModel { get; set; } = new();
+    [Parameter] public string? OrderStateParam { get; set; }
+    ClaimsPrincipal? User;
+    private List<string> OrderStates = new() { $"{OrderState.Processing}", $"{OrderState.Delivered}", $"{OrderState.Cancelled}" };
+    private Guid SelectedOrderId { get; set; } = Guid.Empty;
+    private int CurrentPage { get; set; } = 1;
+    private int TotalPages { get; set; } = 1;
+    private string OrderModalTitle { get; set; } = "Create Order";
+    private string OrderModalButtonText { get; set; } = "Create";
+    private HubConnection? hubConnection;
+
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Loading = true;
+        await GetUserIdentity();
+        await GetOrders();
+        Loading = false;
+
+        hubConnection = netcodeHubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) => await CallWhenNotified());
+        if (hubConnection.State == HubConnectionState.Disconnected) await hubConnection.StartAsync();
+    }
+
+    async Task CallWhenNotified()
+    {
+        await GetOrders();
+        await InvokeAsync(async () => await adminState.GetActiveOrdersCount());
+    }
+
+    private async Task GetOrders()
+    {
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var result = await mediator.Send(new GetAllOrdersQuery());
+        TemporalOrders = result;
+        PermanentOrders = result;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(OrderStateParam) || !homeGenericState.IsAdmin)
+            return;
+
+        StateGeneralMethod();
+    }
+
+    void StateGeneralMethod()
+    {
+        string state = homeGenericState.StateName;
+        PermanentOrders = TemporalOrders.Where(o => o.State.Equals(state, StringComparison.OrdinalIgnoreCase));
+        StateHasChanged();
+    }
+
+    private async Task SearchOrder(Microsoft.AspNetCore.Components.ChangeEventArgs e)
+    {
+        var searchText = e.Value?.ToString();
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            TemporalOrders = PermanentOrders;
+        }
+        else
+        {
+            TemporalOrders = PermanentOrders.Where(o => o.ClientName.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+        }
+        StateHasChanged();
+    }
+
+    private void OpenCreateOrderModal()
+    {
+        CreateOrderModel = new CreateOrderRequestDTO();
+        OrderModalTitle = "Create Order";
+        OrderModalButtonText = "Create";
+        IsOpen = true;
+    }
+
+    private void CloseOrderModal()
+    {
+        IsOpen = false;
+        UpdateOrderModel = new UpdateClientOrderRequestDTO();
+    }
+
+    private void OpenEditOrderModal(Guid orderId)
+    {
+        var order = PermanentOrders.FirstOrDefault(o => o.Id == orderId);
+        if (order != null)
+        {
+            UpdateOrderModel = order.Adapt<UpdateClientOrderRequestDTO>();
+            OrderModalTitle = "Edit Order";
+            OrderModalButtonText = "Save";
+            IsOpen = true;
+        }
+    }
+
+    private void OpenConfirmationModal(Guid orderId)
+    {
+        SelectedOrderId = orderId;
+        IsConfirmationModalOpen = true;
+    }
+
+    private void CloseConfirmationModal()
+    {
+        IsConfirmationModalOpen = false;
+        SelectedOrderId = Guid.Empty;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (SelectedOrderId == Guid.Empty) return;
+
+        Loading = true;
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(new CancelOrderCommand(SelectedOrderId));
+
+        if (response.Flag)
+        {
+            ToasterService.ShowSuccess("Order deleted successfully");
+            await GetOrders();
+        }
+        else
+        {
+            ToasterService.ShowError(response.Message);
+        }
+
+        Loading = false;
+        CloseConfirmationModal();
+    }
+
+    private async Task SaveOrder()
+    {
+        Loading = true;
+        ServiceResponse response;
+        try
+        {
+            using var scope = serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            if (SelectedOrderId != Guid.Empty)
+            {
+                var update = UpdateOrderModel.Adapt<UpdateClientOrderRequestDTO>();
+                update.OrderId = SelectedOrderId;
+                response = await mediator.Send(new UpdateClientOrderCommand(update));
+            }
+            else
+            {
+                response = await mediator.Send(new CreateOrderCommand(CreateOrderModel));
+            }
+
+            if (response.Flag)
+            {
+                await GetOrders();
+                ToasterService.ShowSuccess(response.Message);
+                CloseOrderModal();
+            }
+            else
+            {
+                ToasterService.ShowError(response.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving order: {ex.Message}");
+            ToasterService.ShowError("An error occurred while saving the order.");
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (CurrentPage > 1)
+        {
+            CurrentPage--;
+            GetOrders();
+        }
+    }
+
+    private void NextPage()
+    {
+        if (CurrentPage < TotalPages)
+        {
+            CurrentPage++;
+            GetOrders();
+        }
+    }
+
+    private void NavigateToOrderDetails(Guid orderId)
+    {
+        if (orderId == Guid.Empty)
+        {
+            ToasterService.ShowError("No order selected");
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/app/administration/products/orders/details/{orderId}");
+    }
+
+    private async Task GetUserIdentity()
+    {
+        var authState = await UserAuthState;
+        User = authState.User;
+    }
+
+    private void FilterOrders(string? state)
+    {
+        if (string.IsNullOrEmpty(state))
+        {
+            TemporalOrders = PermanentOrders;
+        }
+        else
+        {
+            TemporalOrders = PermanentOrders.Where(o => o.State.Equals(state, StringComparison.OrdinalIgnoreCase));
+        }
+        StateHasChanged();
+    }
+}
