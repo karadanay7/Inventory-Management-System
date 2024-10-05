@@ -214,7 +214,7 @@
     private IEnumerable<GetCategoryResponseDTO> Categories { get; set; } = Enumerable.Empty<GetCategoryResponseDTO>();
     private IEnumerable<GetLocationResponseDTO> Locations { get; set; } = Enumerable.Empty<GetLocationResponseDTO>();
     private AddProductRequestDTO ProductModel { get; set; } = new();
-    private GetProductResponseDTO SelectedProduct { get; set; } = new();
+  
 
     private bool HasPreviousPage => CurrentPage > 1;
     private bool HasNextPage => CurrentPage < TotalPages;
