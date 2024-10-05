@@ -17,8 +17,6 @@
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Mapster.Core.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/MediatR.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/MediatR.Contracts.dll
-/Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Meziantou.Framework.dll
-/Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Meziantou.Framework.ByteSize.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Microsoft.AspNetCore.Authorization.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Microsoft.AspNetCore.Components.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/Microsoft.AspNetCore.Components.Forms.dll
@@ -71,7 +69,6 @@
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/MudBlazor.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Components.BreadCrumb.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Components.DataGrid.dll
-/Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Components.FileUpload.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Components.Modal.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Components.Validations.dll
 /Users/aysegulkaradan/Projects/IMS/WebUI/bin/Debug/net8.0/NetcodeHub.Packages.Extensions.Attributes.RequiredGuid.dll

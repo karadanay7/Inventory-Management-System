@@ -1,86 +1,88 @@
 ﻿@page "/administration/account/create-user"
 @using Application.DTO.Request
 @using Blazored.Toast.Configuration
+
+@layout MainLayout
+
+
 @rendermode InteractiveServer
 @implements IDisposable
 
 <PageTitle>Add User</PageTitle>
 <div class="w-full flex flex-col items-start justify-center  bg-base-200  ">
-              <BlazoredToasts Position="ToastPosition.TopRight"/>
-    
+    <BlazoredToasts Position="ToastPosition.TopRight" />
+
     <AdminHomeHeader />
     <div class="justify-start">
         <Banner />
     </div>
     <div class=" flex  w-full  items-center justify-center">
 
-        
 
-        
-         
+        <div
+            class="flex  flex-col items-center justify-center p-4  bg-base-200 rounded-md shadow-2xl min-w-64 lg:w-1/2  ">
 
-                <div class="flex  flex-col items-center justify-center p-4  bg-base-200 rounded-md shadow-2xl min-w-64 lg:w-1/2  ">
-                    
-                        <h2 class="font-bold text-lg mb-4 text-center text-primary">Add New User</h2>
-                        <EditForm Model="@UserModel" OnSubmit="RegisterAsync" class="w-full  flex flex-col items-center justify-center ">
-                            <DataAnnotationsValidator />
-                            <div class="form-control w-60 mb-4 ">
-                                <label for="name" class="label">Full Name</label>
-                                <InputText id="name" @bind-Value="UserModel.Name" class="input" />
-                            </div>
-                            <div class="form-control w-60 mb-4">
-                                <label for="email" class="label">Email</label>
-                                <InputText id="email" @bind-Value="UserModel.Email" class="input" />
-                            </div>
-                            <div class="form-control w-60 mb-4">
-                                <label for="policy" class="label">Policy</label>
-                                <InputSelect id="policy" @bind-Value="UserModel.Policy" class="select select-bordered">
-                                    <option value="">Select Policy</option>
-                                    @foreach (var policy in Policies)
-                                    {
-                                        <option value="@policy">@policy</option>
-                                    }
-                                </InputSelect>
-                            </div>
-                            <div class="form-control w-60 mb-4">
-                                <label for="password" class="label">User Password</label>
-                                <InputText id="password" @bind-Value="UserModel.Password"
-                                    Type="@passwordState.PasswordType" class="input" />
-                            </div>
-                            <div class="form-control w-60 mb-4 relative">
-                                <label for="confirmPassword" class="label">Confirm Password</label>
-                                <InputText id="confirmPassword" @bind-Value="UserModel.ConfirmPassword"
-                                    Type="@passwordState.PasswordType" class="input pr-10" />
-                                <button type="button" @onclick="ChangePasswordType"
-                                    class="absolute inset-y-0 right-2 top-10 text-sm text-blue-500 focus:outline-none">
-                                    @passwordState.DisplayText
-                                </button>
-                            </div>
-                            <div class="flex justify-end mt-4">
-
-                                <button type="submit" class="btn btn-primary" disabled="@Loading">Create User</button>
-                            </div>
-                        </EditForm>
-                
+            <h2 class="font-bold text-lg mb-4 text-center text-primary">Add New User</h2>
+            <EditForm Model="@UserModel" OnSubmit="RegisterAsync"
+                class="w-full  flex flex-col items-center justify-center ">
+                <DataAnnotationsValidator />
+                <div class="form-control w-60 mb-4 ">
+                    <label for="name" class="label">Full Name</label>
+                    <InputText id="name" @bind-Value="UserModel.Name" class="input" />
                 </div>
-
-
-                <div>
-                    @if (Loading)
-                    {
-                        <GenericSpinnerButton ButtonClass="btn btn-success"  />
-                    }
+                <div class="form-control w-60 mb-4">
+                    <label for="email" class="label">Email</label>
+                    <InputText id="email" @bind-Value="UserModel.Email" class="input" />
                 </div>
+                <div class="form-control w-60 mb-4">
+                    <label for="policy" class="label">Policy</label>
+                    <InputSelect id="policy" @bind-Value="UserModel.Policy" class="select select-bordered">
+                        <option value="">Select Policy</option>
+                        @foreach (var policy in Policies)
+                        {
+                            <option value="@policy">@policy</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-control w-60 mb-4">
+                    <label for="password" class="label">User Password</label>
+                    <InputText id="password" @bind-Value="UserModel.Password" Type="@passwordState.PasswordType"
+                        class="input" />
+                </div>
+                <div class="form-control w-60 mb-4 relative">
+                    <label for="confirmPassword" class="label">Confirm Password</label>
+                    <InputText id="confirmPassword" @bind-Value="UserModel.ConfirmPassword"
+                        Type="@passwordState.PasswordType" class="input pr-10" />
+                    <button type="button" @onclick="ChangePasswordType"
+                        class="absolute inset-y-0 right-2 top-10 text-sm text-blue-500 focus:outline-none">
+                        @passwordState.DisplayText
+                    </button>
+                </div>
+                <div class="flex justify-end mt-4">
+
+                    <button type="submit" class="btn btn-primary" disabled="@Loading">Create User</button>
+                </div>
+            </EditForm>
+
+        </div>
 
 
-    
+        <div>
+            @if (Loading)
+            {
+                <GenericSpinnerButton ButtonClass="btn btn-success" />
+            }
+        </div>
 
-  
+
+
+
+
 
 
 
     </div>
-  
+
 
 </div>
 
@@ -132,10 +134,10 @@ new string(Policy.ManagerPolicy)
             });
         if (response.Flag)
         {
-           
-         
+
+
             UserModel = new();
-                   ToasterService.ShowSuccess("User Created Successfully");
+            ToasterService.ShowSuccess("User Created Successfully");
         }
         else
         {
@@ -182,4 +184,11 @@ new string(Policy.ManagerPolicy)
         homeGenericState.StateChanged -= StateButtonClicked;
         passwordState.Changed -= StateHasChanged;
     }
-}
+}    using Users.aysegulkaradan.Projects.IMS.WebUI.Components.Layout.Main;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 24 "/Users/aysegulkaradan/Projects/IMS/WebUI/Components/Pages/Identity/Administration/_Imports.razor"
+    

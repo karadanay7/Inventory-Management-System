@@ -25,13 +25,13 @@ namespace Infrastructure.DataAccess
             try
             {
                 // Check if the database can be connected
-                var canConnect = await this.Database.CanConnectAsync();
+                var canConnect = await Database.CanConnectAsync();
                 Console.WriteLine($"Database connection test result: {(canConnect ? "Connected" : "Not Connected")}");
 
                 // Optionally, perform a simple query to further verify
                 if (canConnect)
                 {
-                    var userCount = await this.Users.CountAsync();
+                    var userCount = await Users.CountAsync();
                     Console.WriteLine($"Number of users in the database: {userCount}");
                 }
 

@@ -286,7 +286,7 @@
             },
             "Mapster": {
               "target": "Package",
-              "version": "[7.4.1-pre01, )"
+              "version": "[7.4.0, )"
             },
             "Microsoft.AspNetCore.SignalR.Client": {
               "target": "Package",
@@ -309,10 +309,6 @@
             "NetcodeHub.Packages.Components.DataGrid": {
               "target": "Package",
               "version": "[1.0.1, )"
-            },
-            "NetcodeHub.Packages.Components.FileUpload": {
-              "target": "Package",
-              "version": "[1.0.6, )"
             },
             "NetcodeHub.Packages.Components.Modal": {
               "target": "Package",

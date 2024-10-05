@@ -79,25 +79,25 @@
           }
         }
       },
-      "Mapster/7.4.1-pre01": {
+      "Mapster/7.4.0": {
         "type": "package",
         "dependencies": {
-          "Mapster.Core": "1.2.2-pre01"
+          "Mapster.Core": "1.2.1"
         },
         "compile": {
-          "lib/net8.0/Mapster.dll": {}
+          "lib/net7.0/Mapster.dll": {}
         },
         "runtime": {
-          "lib/net8.0/Mapster.dll": {}
+          "lib/net7.0/Mapster.dll": {}
         }
       },
-      "Mapster.Core/1.2.2-pre01": {
+      "Mapster.Core/1.2.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/Mapster.Core.dll": {}
+          "lib/net7.0/Mapster.Core.dll": {}
         },
         "runtime": {
-          "lib/net8.0/Mapster.Core.dll": {}
+          "lib/net7.0/Mapster.Core.dll": {}
         }
       },
       "MediatR/12.4.0": {
@@ -126,32 +126,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/MediatR.Contracts.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Meziantou.Framework/3.0.39": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Meziantou.Framework.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Meziantou.Framework.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Meziantou.Framework.ByteSize/2.1.1": {
-        "type": "package",
-        "compile": {
-          "lib/net8.0/Meziantou.Framework.ByteSize.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/net8.0/Meziantou.Framework.ByteSize.dll": {
             "related": ".xml"
           }
         }
@@ -1467,20 +1441,6 @@
           "buildMultiTargeting/NetcodeHub.Packages.Components.DataGrid.props": {}
         }
       },
-      "NetcodeHub.Packages.Components.FileUpload/1.0.6": {
-        "type": "package",
-        "dependencies": {
-          "Meziantou.Framework": "3.0.39",
-          "Meziantou.Framework.ByteSize": "2.1.1",
-          "Microsoft.AspNetCore.Components.Web": "8.0.0"
-        },
-        "compile": {
-          "lib/net8.0/NetcodeHub.Packages.Components.FileUpload.dll": {}
-        },
-        "runtime": {
-          "lib/net8.0/NetcodeHub.Packages.Components.FileUpload.dll": {}
-        }
-      },
       "NetcodeHub.Packages.Components.Modal/1.0.1": {
         "type": "package",
         "dependencies": {
@@ -2757,33 +2717,31 @@
         "logo.png"
       ]
     },
-    "Mapster/7.4.1-pre01": {
-      "sha512": "b7YEDoh4nuODGF7wUjgkxA3bTLLt7TxfPkKiFQTgCrNYHem1VVaJyXgsG9RVeQQ44+hoo69IfqENNKn0ox9ddg==",
+    "Mapster/7.4.0": {
+      "sha512": "RYGoDqvS4WTKIq0HDyPBBVIj6N0mluOCXQ1Vk95JKseMHEsbCXSEGKSlP95oL+s42IXAXbqvHj7p0YaRBUcfqg==",
       "type": "package",
-      "path": "mapster/7.4.1-pre01",
+      "path": "mapster/7.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "icon.png",
         "lib/net6.0/Mapster.dll",
         "lib/net7.0/Mapster.dll",
-        "lib/net8.0/Mapster.dll",
-        "mapster.7.4.1-pre01.nupkg.sha512",
+        "mapster.7.4.0.nupkg.sha512",
         "mapster.nuspec"
       ]
     },
-    "Mapster.Core/1.2.2-pre01": {
-      "sha512": "FuNCfTHytW9yeSuGHZ9f8u4cgbzhPL0GqoypA4LD99m0zkafs73IcaMxmbUtYjRThof+Z+jcEQ/suVYTkMpTkA==",
+    "Mapster.Core/1.2.1": {
+      "sha512": "11lokmfliBEMMmjeqxFGNpqGXq6tN96zFqpBmfYeahr4Ybk63oDmeJmOflsATjobYkX248g5Y62oQ2NNnZaeww==",
       "type": "package",
-      "path": "mapster.core/1.2.2-pre01",
+      "path": "mapster.core/1.2.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "icon.png",
         "lib/net6.0/Mapster.Core.dll",
         "lib/net7.0/Mapster.Core.dll",
-        "lib/net8.0/Mapster.Core.dll",
-        "mapster.core.1.2.2-pre01.nupkg.sha512",
+        "mapster.core.1.2.1.nupkg.sha512",
         "mapster.core.nuspec"
       ]
     },
@@ -2816,49 +2774,6 @@
         "lib/netstandard2.0/MediatR.Contracts.xml",
         "mediatr.contracts.2.0.1.nupkg.sha512",
         "mediatr.contracts.nuspec"
-      ]
-    },
-    "Meziantou.Framework/3.0.39": {
-      "sha512": "w6ATNjA7YazZ1fJagD2mEfunoL7CG6iYLb1I9CRz69zDdWSILDddH9UE8JDJ5eRl+YOXqKCTmCJca0HJUCkN3w==",
-      "type": "package",
-      "path": "meziantou.framework/3.0.39",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.txt",
-        "icon.png",
-        "lib/net6.0/Meziantou.Framework.dll",
-        "lib/net6.0/Meziantou.Framework.xml",
-        "lib/net7.0/Meziantou.Framework.dll",
-        "lib/net7.0/Meziantou.Framework.xml",
-        "lib/net8.0/Meziantou.Framework.dll",
-        "lib/net8.0/Meziantou.Framework.xml",
-        "meziantou.framework.3.0.39.nupkg.sha512",
-        "meziantou.framework.nuspec"
-      ]
-    },
-    "Meziantou.Framework.ByteSize/2.1.1": {
-      "sha512": "vWS442AGePDCvzh6dDKATfWm6fAd1qV0fm2GMsfFzA97yexQgchuwVvSvYS3soB+xQlY0M+MfsGHi6aNQHaqUw==",
-      "type": "package",
-      "path": "meziantou.framework.bytesize/2.1.1",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.txt",
-        "icon.png",
-        "lib/net462/Meziantou.Framework.ByteSize.dll",
-        "lib/net462/Meziantou.Framework.ByteSize.xml",
-        "lib/net6.0/Meziantou.Framework.ByteSize.dll",
-        "lib/net6.0/Meziantou.Framework.ByteSize.xml",
-        "lib/net7.0/Meziantou.Framework.ByteSize.dll",
-        "lib/net7.0/Meziantou.Framework.ByteSize.xml",
-        "lib/net8.0/Meziantou.Framework.ByteSize.dll",
-        "lib/net8.0/Meziantou.Framework.ByteSize.xml",
-        "lib/netstandard2.0/Meziantou.Framework.ByteSize.dll",
-        "lib/netstandard2.0/Meziantou.Framework.ByteSize.xml",
-        "meziantou.framework.bytesize.2.1.1.nupkg.sha512",
-        "meziantou.framework.bytesize.nuspec",
-        "readme.md"
       ]
     },
     "Microsoft.AspNetCore.Authorization/8.0.6": {
@@ -4854,20 +4769,6 @@
         "staticwebassets/event.js"
       ]
     },
-    "NetcodeHub.Packages.Components.FileUpload/1.0.6": {
-      "sha512": "lTmI5ldkYki5ar9fF1jtySs4K87mTWxXOjEiXr1TfplKYbz56BuHt9dgJq/SKOuEpHt0AJ5GvJTrTJSPK+9naQ==",
-      "type": "package",
-      "path": "netcodehub.packages.components.fileupload/1.0.6",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "License.txt",
-        "lib/net8.0/NetcodeHub.Packages.Components.FileUpload.dll",
-        "netcode-hub.png",
-        "netcodehub.packages.components.fileupload.1.0.6.nupkg.sha512",
-        "netcodehub.packages.components.fileupload.nuspec"
-      ]
-    },
     "NetcodeHub.Packages.Components.Modal/1.0.1": {
       "sha512": "AFBJ+/D4bB0gcixsQwGguUY8u9E4ME2MIEWluNdCb0i/voC7pIYiSqbTKf3Djq+xxSvq4RS17fBl5dzgqbWr1Q==",
       "type": "package",
@@ -6745,13 +6646,12 @@
       "Application >= 1.0.0",
       "Blazored.Toast >= 4.2.1",
       "Infrastructure >= 1.0.0",
-      "Mapster >= 7.4.1-pre01",
+      "Mapster >= 7.4.0",
       "Microsoft.AspNetCore.SignalR.Client >= 8.0.8",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.8",
       "MudBlazor >= 7.6.0",
       "NetcodeHub.Packages.Components.BreadCrumb >= 1.0.0",
       "NetcodeHub.Packages.Components.DataGrid >= 1.0.1",
-      "NetcodeHub.Packages.Components.FileUpload >= 1.0.6",
       "NetcodeHub.Packages.Components.Modal >= 1.0.1",
       "NetcodeHub.Packages.Components.Validations >= 1.0.1",
       "NetcodeHub.Packages.UI.Templates.Breeze >= 1.1.4",
@@ -6816,7 +6716,7 @@
           },
           "Mapster": {
             "target": "Package",
-            "version": "[7.4.1-pre01, )"
+            "version": "[7.4.0, )"
           },
           "Microsoft.AspNetCore.SignalR.Client": {
             "target": "Package",
@@ -6839,10 +6739,6 @@
           "NetcodeHub.Packages.Components.DataGrid": {
             "target": "Package",
             "version": "[1.0.1, )"
-          },
-          "NetcodeHub.Packages.Components.FileUpload": {
-            "target": "Package",
-            "version": "[1.0.6, )"
           },
           "NetcodeHub.Packages.Components.Modal": {
             "target": "Package",
