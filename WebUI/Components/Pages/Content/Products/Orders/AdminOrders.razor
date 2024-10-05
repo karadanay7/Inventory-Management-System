@@ -346,7 +346,7 @@
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var response = await mediator.Send(new CancelOrderCommand(SelectedOrderId));
 
-        if (response.Flag)
+        if (response.Message)
         {
             ToasterService.ShowSuccess("Order cancelled successfully");
             await GetOrders();

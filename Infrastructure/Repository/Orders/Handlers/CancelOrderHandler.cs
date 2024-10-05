@@ -21,12 +21,12 @@ public class CancelOrderHandler(DataAccess.IDbContextFactory<AppDbContext> conte
             if (order == null) return new ServiceResponse(true, "Order not found");
           order.OrderState = OrderState.Cancelled;
             await dbContext.SaveChangesAsync(cancellationToken);
-            return new ServiceResponse(false, "Order cancelled successfully");
+            return new ServiceResponse(true, "Order cancelled successfully");
            
         }
         catch (Exception ex)
         {
-            return new ServiceResponse(true, ex.Message);
+            return new ServiceResponse(false, ex.Message);
         }
     }
 }

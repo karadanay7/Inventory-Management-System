@@ -25,11 +25,11 @@ public class CreateOrderHandler(DataAccess.IDbContextFactory<AppDbContext> conte
               data.Price = product.Price;
             dbContext.Orders.Add(data);
             await dbContext.SaveChangesAsync(cancellationToken);
-            return new ServiceResponse(false, "Order places successfully");
+            return new ServiceResponse(true, "Order placed successfully");
         }
         catch (Exception ex)
         {
-            return new ServiceResponse(true, ex.Message);
+            return new ServiceResponse(false, ex.Message);
         }
     }
 }
