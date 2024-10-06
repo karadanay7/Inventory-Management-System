@@ -20,22 +20,18 @@
 
 
 <PageTitle>Orders</PageTitle>
-
-<div class="mx-auto min-h-screen bg-base-200 p-2">
-    <BlazoredToasts Position="ToastPosition.TopRight" />
     <AdminHomeHeader />
-      <header class="flex flex-col md:flex-row items-center justify-between gap-2 mb-4">
-        <button @onclick="OpenCreateOrderModal" class="btn btn-primary">
+<div class="mx-auto min-h-screen bg-base-200 p-4">
+    <BlazoredToasts Position="ToastPosition.TopRight" />
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-2 mb-4 ">
+        <button @onclick="OpenCreateOrderModal" class="btn btn-primary ">
             <i class="fas fa-plus mr-2"></i> Create Order
         </button>
         <input type="search" @oninput="SearchOrder" placeholder="Search..." class="input input-bordered" />
-    </header>
+    </div>
       <div class="mb-4 flex justify-end gap-2">
-        <button @onclick="() => NavigateToOrderDetails(SelectedOrderId)" 
-                class="btn btn-success" 
-                disabled="@(SelectedOrderId == Guid.Empty)">
-            <i class="fas fa-eye mr-2"></i> View
-        </button>
+      
         <button @onclick="() => OpenEditOrderModal(SelectedOrderId)" 
                 class="btn btn-warning" 
                 disabled="@(SelectedOrderId == Guid.Empty)">
@@ -282,8 +278,10 @@
         using var scope = serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var result = await mediator.Send(new GetAllOrdersQuery());
-        TemporalOrders = result;
-      
+
+        // Set the total number of orders
+        TotalPages = (int)Math.Ceiling(result.Count() / 7.00); // Assuming result is a list of orders
+        TemporalOrders = result.Skip((CurrentPage - 1) * 7).Take(7); // Get only the orders for the current page
     }
 
     protected override void OnParametersSet()
@@ -458,16 +456,7 @@ private void SelectOrder(Guid orderId)
         }
     }
 
-    private void NavigateToOrderDetails(Guid orderId)
-    {
-        if (orderId == Guid.Empty)
-        {
-            ToasterService.ShowError("No order selected");
-            return;
-        }
-
-        NavigationManager.NavigateTo($"/app/administration/products/orders/details/{orderId}");
-    }
+   
 
     private async Task GetUserIdentity()
     {
