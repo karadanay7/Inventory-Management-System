@@ -250,7 +250,7 @@
         User = (await UserAuthState!).User;
         CanDelete = customAuthorizationService.CustomClaimChecker(User, DefaultClaims.Delete);
         homeGenericState.StateChanged += StateButtonClicked;
-        await LoadToolbarItems();
+
         hubConnection = netcodeHubConnectionService.GetHubConnection();
         hubConnection.On<string>("Notify", async (clientId) =>
         {
@@ -442,11 +442,6 @@
     }
 
 
-
-    private async Task LoadToolbarItems()
-    {
-        // Load toolbar items logic
-    }
     void StateButtonClicked()
     {
         string adminOrderUrl = "app/administration/products/orders";

@@ -17,6 +17,8 @@
 @inject IToasterService ToasterService
 @inject IAccountService accountService
 
+
+
 <PageTitle>Orders</PageTitle>
 
 <div class="mx-auto min-h-screen bg-base-200 p-2">
@@ -45,6 +47,7 @@
             <i class="fas fa-trash-alt mr-2"></i> Cancel
         </button>
     </div>
+  
     <div class="overflow-x-auto">
         <table class="table table-zebra w-full">
             <thead>
@@ -108,57 +111,79 @@
         <button @onclick="PreviousPage" class="btn btn-secondary" disabled="@(!HasPreviousPage)">Previous</button>
         <span>Page @CurrentPage of @TotalPages</span>
         <button @onclick="NextPage" class="btn btn-secondary" disabled="@(!HasNextPage)">Next</button>
+   
+
     </div>
+   
 
 
-
-    <!-- Create/Edit Order Modal -->
-    @if (IsOpen) // Check if this condition is met
+ 
+  @if (IsOpen)
     {
         <div class="modal modal-open">
             <div class="modal-box bg-base-200">
                 <h2 class="font-bold text-lg">@OrderModalTitle</h2>
-                <EditForm Model="@OrderModel" OnSubmit="SaveOrder">
-                    <DataAnnotationsValidator />
-                   
-                  
-                   
-                    <div class="form-group">
-                        <label for="quantity" class="label">Quantity</label>
-                        <InputNumber id="quantity" class="input w-full" @bind-Value="OrderModel.Quantity" />
-                    </div>
-                    <div class="form-group">
-                        <label for="productId" class="label">Product</label>
-                        <InputSelect id="clientId" class="select select-bordered w-full" @bind-Value="OrderModel.ProductId">
-                            <option value="">Select Product</option>
-                            @foreach (var product in Products)
-                            {
-                                <option value="@product.Id">@product.Name</option>
-                            }
-                        </InputSelect>
-                    </div>
-                     <div class="form-group">
-                        <label for="clientId" class="label">Client</label>
-                        <InputSelect id="clientId" class="select select-bordered w-full" @bind-Value="OrderModel.ClientId">
-                            <option value="">Select Client</option>
-                            @foreach (var client in Clients)
-                            {
-                                <option value="@client.UserId">@client.Name</option>
-                            }
-                        </InputSelect>
-                    </div>
-                    <div class="form-group mt-4 flex justify-between">
-                        <button type="submit" class="btn btn-primary">Create</button>
-                        <button type="button" @onclick="CloseOrderModal" class="btn btn-secondary">Cancel</button>
-                    </div>
-                   
+                @if ( SelectedOrderId == Guid.Empty)
+                {
                  
-                </EditForm>
+                    <EditForm Model="@OrderModel" OnSubmit="SaveOrder">
+                        <DataAnnotationsValidator />
+                        
+                        <!-- Fields for creating a new order -->
+                        <div class="form-group">
+                            <label for="quantity" class="label">Quantity</label>
+                            <InputNumber id="quantity" class="input w-full" @bind-Value="OrderModel.Quantity" />
+                        </div>
+                        <div class="form-group">
+                            <label for="productId" class="label">Product</label>
+                            <InputSelect id="productId" class="select select-bordered w-full" @bind-Value="OrderModel.ProductId">
+                                <option value="">Select Product</option>
+                                @foreach (var product in Products)
+                                {
+                                    <option value="@product.Id">@product.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="clientId" class="label">Client</label>
+                            <InputSelect id="clientId" class="select select-bordered w-full" @bind-Value="OrderModel.ClientId">
+                                <option value="">Select Client</option>
+                                @foreach (var client in Clients)
+                                {
+                                    <option value="@client.UserId">@client.Name</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </EditForm>
+                }
+               else
+                {
+                    <EditForm Model="@UpdateOrderModel" OnSubmit="SaveOrder">
+                        <DataAnnotationsValidator />
+                        
+                        <div class="form-group">
+                            <label for="state" class="label">State</label>
+                            <InputSelect id="state" class="select select-bordered w-full" @bind-Value="UpdateOrderModel.OrderState">
+                                @foreach (var state in OrderStates)
+                                {
+                                    <option value="@state">@state</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="form-group">
+                            <label for="deliveringDate" class="label">Delivering Date</label>
+                            <InputDate id="deliveringDate" class="input w-full" @bind-Value="UpdateOrderModel.DeliveringDate" />
+                        </div>
+                    </EditForm>
+                }
+                <div class="form-group mt-4 flex justify-between">
+                    <button type="submit" class="btn btn-primary" @onclick="SaveOrder">@OrderModalButtonText</button>
+                    <button type="button" @onclick="CloseOrderModal" class="btn btn-secondary">Cancel</button>
+                </div>
             </div>
         </div>
     }
-
-    <!-- Confirmation Modal -->
+    
      @if (IsConfirmationModalOpen)
     {
         <div class="modal modal-open">
@@ -186,7 +211,9 @@
 @code {
     public bool Loading { get; set; } = false;
     public bool IsOpen { get; set; } = false;
+    public bool isEditModalOpen { get; set; } = false;
     public bool IsConfirmationModalOpen { get; set; } = false;
+     private Guid IdHolder { get; set; } = Guid.Empty;
     [CascadingParameter] public Task<AuthenticationState>? UserAuthState { get; set; }
     private IEnumerable<GetOrderResponseDTO> TemporalOrders { get; set; } = [];
     private IEnumerable<GetOrderResponseDTO> PermanentOrders { get; set; } = [];
@@ -198,7 +225,7 @@
 
     [Parameter] public string? OrderStateParam { get; set; }
     ClaimsPrincipal? User;
-    private List<string> OrderStates = new() { $"{OrderState.Processing}", $"{OrderState.Delivered}", $"{OrderState.Cancelled}" };
+    private List<string> OrderStates = new() { $"{OrderState.Processing}", $"{OrderState.Delivered}", $"{OrderState.Cancelled}", $"{OrderState.Delivering}", };
     private Guid SelectedOrderId { get; set; } = Guid.Empty;
     private int CurrentPage { get; set; } = 1;
     private int TotalPages { get; set; } = 1;
@@ -301,14 +328,17 @@
     {
         IsOpen = false;
         UpdateOrderModel = new UpdateClientOrderRequestDTO();
+        IdHolder = Guid.Empty;
     }
 
     private void OpenEditOrderModal(Guid orderId)
     {
-        var order = PermanentOrders.FirstOrDefault(o => o.Id == orderId);
+        
+        var order = TemporalOrders.FirstOrDefault(o => o.Id == orderId);
         if (order != null)
         {
             UpdateOrderModel = order.Adapt<UpdateClientOrderRequestDTO>();
+            IdHolder = order.Id;
             OrderModalTitle = "Edit Order";
             OrderModalButtonText = "Save";
             IsOpen = true;
@@ -317,14 +347,16 @@
 
     private void OpenConfirmationModal(Guid orderId)
     {
-        SelectedOrderId = orderId;
+       IdHolder = orderId;
         IsConfirmationModalOpen = true;
     }
 
     private void CloseConfirmationModal()
     {
+   
         IsConfirmationModalOpen = false;
-        SelectedOrderId = Guid.Empty;
+         IdHolder = Guid.Empty;
+       
     }
      async Task GetProducts()
     {
@@ -332,21 +364,21 @@
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var result = await mediator.Send(new GetProductsQuery());
         Products = result;
-         Console.WriteLine("Products fetched:");
+      
    
       
     }
 
     private async Task ConfirmDelete()
     {
-        
+        if(IdHolder == Guid.Empty) return;
 
         Loading = true;
         using var scope = serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        var response = await mediator.Send(new CancelOrderCommand(SelectedOrderId));
-
-        if (response.Message)
+        var response = await mediator.Send(new CancelOrderCommand(IdHolder));
+            
+        if (response.Flag)
         {
             ToasterService.ShowSuccess("Order cancelled successfully");
             await GetOrders();
@@ -369,10 +401,10 @@
             using var scope = serviceProvider.CreateScope();
             var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-            if (SelectedOrderId != Guid.Empty)
+            if (IdHolder != Guid.Empty)
             {
                 var update = UpdateOrderModel.Adapt<UpdateClientOrderRequestDTO>();
-                update.OrderId = SelectedOrderId;
+                update.OrderId = IdHolder;
                 response = await mediator.Send(new UpdateClientOrderCommand(update));
             }
             else
