@@ -20,10 +20,11 @@ public class GetGenericOrdersCountHandler(DataAccess.IDbContextFactory<AppDbCont
     else
     list = await dbContext.Orders.AsNoTracking().ToListAsync(cancellationToken: cancellationToken);
     int ProcessingCount = list.Count(x => x.OrderState == OrderState.Processing);
-    int DeliveredCount = list.Count(x => x.OrderState == OrderState.Delivered);
+  
     int DeliveringCount = list.Count(x => x.OrderState == OrderState.Delivering);
+      int DeliveredCount = list.Count(x => x.OrderState == OrderState.Delivered);
     int CancelledCount = list.Count(x => x.OrderState == OrderState.Cancelled);
-    return new GetOrdersCountResponseDTO(ProcessingCount, DeliveredCount, DeliveringCount, CancelledCount);
+    return new GetOrdersCountResponseDTO(ProcessingCount,  DeliveringCount,DeliveredCount, CancelledCount);
     
   }
 }
