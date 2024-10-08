@@ -3,57 +3,56 @@
 @using WebUI.States.Administration
 @inject GenericHomeHeaderState homeGenericState
 @inject AdminActiveOrderCountState adminState
-<div class=" flex justify-between items-center p-4 w-full">
-    <button class="btn btn-primary" @onclick="ToggleModel">@((isOpen ? "Close Order Status" : "Open Order Status"))</button>
-    @if(isOpen)
-    {
-      
-  
-    <div class="flex  gap-1 lg:gap-8 ">
-        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true))">
-            <i></i>
-            <span>@adminState.ProcessingCount</span>
-            Processing
-        </button>
-        <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivering, true))">
-            <i></i>
-            <span>@adminState.DeliveringCount</span>
-            Delivering
-        </button>
-          <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivered, true))">
-            <i></i>
-            <span>@adminState.DeliveredCount</span>
-           Delivered
-        </button>
-           <button class="btn btn-warning" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Cancelled, true))">
-            <i></i>
-            <span>@adminState.CancelledCount</span>
-           Cancelled
-        </button>
 
-    </div>
+<div class="flex justify-between items-center p-4 w-full">
+    <button class="btn btn-primary" @onclick="ToggleModel">
+        @((isOpen ? "Close Order Status" : "Open Order Status"))
+    </button>
+
+    @if (isOpen)
+    {
+        <div class="flex gap-1 lg:gap-8">
+            <button class="btn btn-warning" @onclick="()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing, true)">
+                <i></i>
+                <span>@adminState.ProcessingCount</span>
+                Processing
+            </button>
+
+            <button class="btn btn-warning" @onclick="()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivering, true)">
+                <i></i>
+                <span>@adminState.DeliveringCount</span>
+                Delivering
+            </button>
+
+            <button class="btn btn-warning" @onclick="()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Delivered, true)">
+                <i></i>
+                <span>@adminState.DeliveredCount</span>
+                Delivered
+            </button>
+
+            <button class="btn btn-warning" @onclick="()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Cancelled, true)">
+                <i></i>
+                <span>@adminState.CancelledCount</span>
+                Cancelled
+            </button>
+        
+        </div>
     }
-    else{
-        <div></div>
-    }
-   
 </div>
 
-@code
-{
-    public int Count { get; set; }
+@code {
     private bool isOpen = false;
+
     protected override async Task OnInitializedAsync()
     {
         adminState.StateChanged += StateHasChanged;
         await adminState.GetActiveOrdersCount();
-        
-
     }
+
     public void Dispose() => adminState.StateChanged -= StateHasChanged;
-              private void ToggleModel()
+
+    private void ToggleModel()
     {
         isOpen = !isOpen;
     }
-   
 }

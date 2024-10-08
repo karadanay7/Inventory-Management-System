@@ -98,16 +98,7 @@
     private CreateUserRequestDTO UserModel { get; set; } = new();
 
     private bool Loading = false;
-    private bool isModalOpen = false;
-    private void OpenModal()
-    {
-        isModalOpen = true;
-    }
-
-    private void CloseModal()
-    {
-        isModalOpen = false;
-    }
+   
 
     private List<string> Policies = new List<string>
 {
